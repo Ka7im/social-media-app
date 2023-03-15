@@ -7,6 +7,9 @@ import { router } from './router';
 const theme: DefaultTheme = {
     dark: {
         component: '#222222',
+        text: '#6f6f6f',
+        hover: '#333333',
+        main: '#141414',
     },
 };
 
