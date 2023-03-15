@@ -1,12 +1,10 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
-import { validationResult } from 'express-validator';
-
-import { registerValidator } from './validations/auth.js';
-
-import UserModel from './models/User.js';
+import { registerValidator, loginValidation } from './validations/auth.js';
+import checkAuth from './middleware/checkAuth.js';
+import * as UserController from './controllers/UserController.js';
+import PostController from './controllers/PostController.js';
+import { postCreateValidation } from './validations/post.js';
 
 mongoose
     .connect('mongodb://localhost:27017/social-media-app')
@@ -22,27 +20,17 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
-app.post('/auth/register', registerValidator, async (req, res) => {
-    const { email, fullName, avatarUrl, passwordHash } = req.body;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json(errors.array());
-    }
+app.post('/auth/login', loginValidation, UserController.login);
 
-    const salt = await bcrypt.genSalt(10);
-    const password = await bcrypt.hash(passwordHash, salt);
+app.post('/auth/register', registerValidator, UserController.register);
 
-    const doc = new UserModel({
-        email,
-        fullName,
-        avatarUrl,
-        passwordHash: password,
-    });
+app.get('/auth/me', checkAuth, UserController.getMe);
 
-    const user = await doc.save();
-
-    res.json(user);
-});
+app.get('/posts', PostController.getAll);
+app.get('/posts/:id', PostController.getOne);
+app.post('/posts', checkAuth, postCreateValidation, PostController.create);
+app.delete('/posts/:id', checkAuth, PostController.remove);
+app.patch('/posts/:id', checkAuth, PostController.update);
 
 app.listen(5000, (err) => {
     if (err) {
