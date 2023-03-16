@@ -1,5 +1,7 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { Button } from '../components/Button';
 
 const AuthWrapper = styled.div`
     display: flex;
@@ -47,7 +49,25 @@ const AuthSubTitle = styled.div`
     color: #fff;
 `;
 
+const AuthButton = styled(Button)`
+    width: 180px;
+    text-align: center;
+`;
+
 const Authorization = () => {
+    const location = useLocation();
+
+    if (location.pathname === '/login') {
+        return (
+            <AuthWrapper>
+                <AuthTitle>Вход в аккаунт</AuthTitle>
+                <AuthInput placeholder='Email' type={'email'} />
+                <AuthInput placeholder='Пароль' type={'password'} />
+                <AuthButton>Войти</AuthButton>
+            </AuthWrapper>
+        );
+    }
+
     return (
         <AuthWrapper>
             <AuthTitle>Cоздание аккаунта</AuthTitle>
@@ -56,6 +76,7 @@ const Authorization = () => {
             <AuthInput placeholder='Полное имя' />
             <AuthInput placeholder='Email' type={'email'} />
             <AuthInput placeholder='Пароль' type={'password'} />
+            <AuthButton>Зарегистрироваться</AuthButton>
         </AuthWrapper>
     );
 };

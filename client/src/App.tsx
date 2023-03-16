@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from './components/Header';
+import Layout from './components/Layout';
 
 const Global = createGlobalStyle`
     *{

@@ -10,6 +10,7 @@ export const Button = styled.div`
     font-weight: 500;
     width: max-content;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover {
         background-color: ${(props) => props.theme.dark.hover}
