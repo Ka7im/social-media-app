@@ -5,7 +5,7 @@ import Sidebar from './Sidebar';
 
 const Grid = styled.div`
     display: grid;
-    grid-template-columns: 1fr 2.5fr 1fr;
+    grid-template-columns: 0.7fr 2fr 1fr;
     column-gap: 10px;
 `;
 

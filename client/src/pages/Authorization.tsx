@@ -1,9 +1,10 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { Button } from '../components/Button';
 
-const AuthWrapper = styled.div`
+const AuthWrapper = styled.form`
     display: flex;
     row-gap: 20px;
     padding: 20px;
@@ -23,7 +24,11 @@ const AuthTitle = styled.div`
     margin-bottom: 15px;
 `;
 
-const AuthInput = styled.input`
+interface IInputProps {
+    isError?: boolean;
+}
+
+const AuthInput = styled.input<IInputProps>`
     background-color: #424242;
     border: none;
     border-radius: 10px;
@@ -31,6 +36,11 @@ const AuthInput = styled.input`
     height: 30px;
     padding: 15px;
     outline: none;
+    ${(props) => {
+        if (props.isError) {
+            return 'border: 2px solid red';
+        }
+    }}
 `;
 
 const FileInput = styled.input`
@@ -54,22 +64,58 @@ const AuthButton = styled(Button)`
     text-align: center;
 `;
 
+const Error = styled.div`
+    color: red;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: -10px;
+`;
+
 const Authorization = () => {
     const location = useLocation();
 
+    const {
+        handleSubmit,
+        setError,
+        formState: { errors, isValid },
+        register,
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
+
+    const onSubmit = (values: { email: string; password: string }) => {
+        console.log(values);
+    };
+
     if (location.pathname === '/login') {
         return (
-            <AuthWrapper>
+            <AuthWrapper onSubmit={handleSubmit(onSubmit)}>
                 <AuthTitle>Вход в аккаунт</AuthTitle>
-                <AuthInput placeholder='Email' type={'email'} />
-                <AuthInput placeholder='Пароль' type={'password'} />
+                <AuthInput
+                    placeholder='Email'
+                    {...register('email', { required: 'Укажите почту' })}
+                    type={'email'}
+                    isError={!!errors.email}
+                />
+                {errors.email && <Error>{errors.email?.message}</Error>}
+                <AuthInput
+                    placeholder='Пароль'
+                    {...register('password', { required: 'Укажите пароль' })}
+                    type={'password'}
+                    isError={!!errors.password}
+                />
+                {errors.password && <Error>{errors.password?.message}</Error>}
                 <AuthButton>Войти</AuthButton>
             </AuthWrapper>
         );
     }
 
     return (
-        <AuthWrapper>
+        <AuthWrapper onSubmit={handleSubmit(onSubmit)}>
             <AuthTitle>Cоздание аккаунта</AuthTitle>
             <AuthSubTitle>Выберите изображение</AuthSubTitle>
             <FileInput type={'file'} />

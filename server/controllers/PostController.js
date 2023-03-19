@@ -1,6 +1,24 @@
 import PostModel from '../models/Post.js';
 
 class PostController {
+    async getLastTags(req, res) {
+        try {
+            const posts = await PostModel.find().limit(5).exec();
+
+            const tags = posts
+                .map((obj) => obj.tags)
+                .flat()
+                .slice(0, 5);
+
+            res.json(tags);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                message: 'Не удалось получить теги',
+            });
+        }
+    }
+
     async getAll(req, res) {
         try {
             const posts = await PostModel.find().populate('user').exec();
@@ -8,7 +26,7 @@ class PostController {
             res.json(posts);
         } catch (error) {
             console.log(error);
-            res.state(500).json({
+            res.status(500).json({
                 message: 'Не удалось получить статьи',
             });
         }
@@ -28,7 +46,9 @@ class PostController {
                 {
                     returnDocument: 'after',
                 }
-            );
+            )
+                .populate('user')
+                .exec();
 
             if (!updatedPost) {
                 return res.status(404).json({ message: 'Статья не найдена' });

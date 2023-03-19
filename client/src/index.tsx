@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux/es/exports';
 import { RouterProvider } from 'react-router-dom';
 import { DefaultTheme, ThemeProvider } from 'styled-components';
+import store from './redux/store';
 import { router } from './router';
 
 const theme: DefaultTheme = {
@@ -18,7 +20,9 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
-    </ThemeProvider>
+    <Provider store={store}>
+        <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+        </ThemeProvider>
+    </Provider>
 );

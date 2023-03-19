@@ -5,6 +5,7 @@ import { registerValidator, loginValidation } from './validations/auth.js';
 import { checkAuth, handleValidationErrors } from './middleware/index.js';
 import { UserController, PostController } from './controllers/index.js';
 import { postCreateValidation } from './validations/post.js';
+import cors from 'cors';
 
 mongoose
     .connect('mongodb://localhost:27017/social-media-app')
@@ -27,6 +28,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 app.get('/', (req, res) => {
@@ -55,7 +57,7 @@ app.post(
 );
 
 app.get('/auth/me', checkAuth, UserController.getMe);
-
+app.get('/tags', PostController.getLastTags);
 app.get('/posts', PostController.getAll);
 app.get('/posts/:id', PostController.getOne);
 app.post(
