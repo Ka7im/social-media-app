@@ -3,4 +3,6 @@ export interface IUser {
     fullName: string;
     email: string;
     avatarUrl: string;
+    createdAt: string;
+    updatedAt: string;
 }

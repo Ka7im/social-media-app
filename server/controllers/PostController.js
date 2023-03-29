@@ -3,7 +3,10 @@ import PostModel from '../models/Post.js';
 class PostController {
     async getLastTags(req, res) {
         try {
-            const posts = await PostModel.find().limit(5).exec();
+            const posts = await PostModel.find()
+                .limit(5)
+                .sort('-createdAt')
+                .exec();
 
             const tags = posts
                 .map((obj) => obj.tags)
@@ -21,7 +24,10 @@ class PostController {
 
     async getAll(req, res) {
         try {
-            const posts = await PostModel.find().populate('user').exec();
+            const posts = await PostModel.find()
+                .populate('user')
+                .sort('-updatedAt')
+                .exec();
 
             res.json(posts);
         } catch (error) {
@@ -65,11 +71,13 @@ class PostController {
 
     async create(req, res) {
         try {
+            const tags = req.body.tags.split(', ');
+
             const doc = new PostModel({
                 title: req.body.title,
                 text: req.body.text,
                 imageUrl: req.body.imageUrl,
-                tags: req.body.tags,
+                tags,
                 user: req.userId,
             });
 
@@ -91,11 +99,10 @@ class PostController {
             const post = await PostModel.findByIdAndDelete({ _id: id });
 
             if (!post) {
-                console.log(error);
                 res.status(500).json({ message: 'Статья не найдена' });
             }
 
-            res.json({ success: true });
+            res.json({ success: true, post });
         } catch (error) {
             console.log(error);
             res.status(500).json({ message: 'Не удалось удалить статью' });

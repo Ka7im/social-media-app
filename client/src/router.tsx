@@ -3,6 +3,7 @@ import { createRoutesFromElements, Route } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
 import Spinner from './components/Spinner';
+import AddPost from './pages/AddPost';
 import Authorization from './pages/Authorization';
 import Posts from './pages/Posts';
 
@@ -13,6 +14,8 @@ const routes = createRoutesFromElements(
         <Route index element={<Posts />} />
         <Route path='authorization' element={<Authorization />} />
         <Route path='login' element={<Authorization />} />
+        <Route path='add-post' element={<AddPost />} />
+        <Route path='/:id/edit' element={<AddPost />} />
         <Route
             path='/:id'
             element={

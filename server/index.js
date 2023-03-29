@@ -35,10 +35,9 @@ app.get('/', (req, res) => {
     res.send('Hello world!');
 });
 
-app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('image'), (req, res) => {
     res.json({
         url: `/uploads/${req.file.originalname}`,
-        file: req.file,
     });
 });
 

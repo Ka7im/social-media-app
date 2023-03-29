@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
+import { logout } from '../redux/slices/authSlice/authSlice';
+import { isAuthSelector } from '../redux/slices/authSlice/selectors';
 import { Button } from './Button';
 import { Container } from './Container';
+
 
 const HeaderWrapper = styled.header`
     display: flex;
@@ -29,7 +33,14 @@ const Logo = styled.h1`
     font-weight: 700;
 `;
 
+
 const Header = () => {
+    const isAuth = useAppSelector(isAuthSelector);
+    const dispatch = useAppDispatch();
+
+    const onClickLogout = () => {
+        dispatch(logout());
+    };
     return (
         <HeaderWrapper>
             <Container>
@@ -38,14 +49,27 @@ const Header = () => {
                         <Logo>SOCIAPEDIA</Logo>
                     </Link>
                     <ButtonWrapper>
-                        <Link to='/login' style={{ textDecoration: 'none' }}>
-                            <Button>Войти</Button>
-                        </Link>
+                        {isAuth ? (
+                            <Link
+                                to='/login'
+                                style={{ textDecoration: 'none' }}
+                                onClick={onClickLogout}
+                            >
+                                <Button>Выйти</Button>
+                            </Link>
+                        ) : (
+                            <Link
+                                to='/login'
+                                style={{ textDecoration: 'none' }}
+                            >
+                                <Button>Войти</Button>
+                            </Link>
+                        )}
                         <Link
                             to='/authorization'
                             style={{ textDecoration: 'none' }}
                         >
-                            <Button>Авторизоваться</Button>
+                            <Button>Создать аккаунт</Button>
                         </Link>
                     </ButtonWrapper>
                 </FlexBetween>

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { $host } from '../../../axios/axios';
+import { $authHost, $host } from '../../../axios/axios';
 import { IPost } from '../../../types/Post';
 
 export enum Status {
@@ -42,6 +42,18 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
     return data;
 });
 
+export const fetchRemovePost = createAsyncThunk(
+    'posts/fetchRemovePost',
+    async (id: string) => {
+        const { data } = await $authHost.delete(`posts/${id}`);
+
+        return {
+            id,
+            tags: data.post.tags,
+        };
+    }
+);
+
 const postsSlice = createSlice({
     name: 'posts',
     initialState,
@@ -71,6 +83,25 @@ const postsSlice = createSlice({
             .addCase(fetchTags.rejected, (state) => {
                 state.tags.items = [];
                 state.tags.status = Status.Error;
+            })
+            .addCase(fetchRemovePost.fulfilled, (state, action) => {
+                state.posts.items = state.posts.items.filter(
+                    (post) => post._id !== action.payload.id
+                );
+                state.tags.items = state.tags.items.filter((tag) => {
+                    let isEqual = true;
+
+                    if (tag.length === action.payload.tags.length) {
+                        for (let i = 0; i < tag.length; i++) {
+                            if (tag[i] !== action.payload.tags[i]) {
+                                isEqual = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    return !isEqual;
+                });
             });
     },
 });

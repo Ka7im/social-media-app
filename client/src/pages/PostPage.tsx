@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { useDispatch } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { $host } from '../axios/axios';
 import { Container } from '../components/Container';
@@ -22,13 +23,19 @@ import {
 } from '../components/Post';
 import Spinner from '../components/Spinner';
 import { IPost } from '../types/Post';
+import { BASE_URL } from '../utils/consts';
 
 const PostPageContainer = styled(Container)`
     width: 800px;
 `;
 
-const PostPageWrapper = styled(PostWrapper)`
-    cursor: default;
+const PostPageWrapper = styled.div`
+    border: 1px solid #424242;
+    background-color: ${(props) => props.theme.dark.component};
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 100%;
+    position: relative;
 `;
 
 const PostTextWrapper = styled.p`
@@ -44,10 +51,18 @@ const PostPage = () => {
         createdAt: '',
         tags: [''],
         text: '',
+        imageUrl: '',
         title: '',
         updatedAt: '',
         viewsCount: 0,
-        user: { _id: '', avatarUrl: '', email: '', fullName: '' },
+        user: {
+            _id: '',
+            avatarUrl: '',
+            email: '',
+            fullName: '',
+            createdAt: '',
+            updatedAt: '',
+        },
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -67,25 +82,29 @@ const PostPage = () => {
     return (
         <PostPageContainer>
             <PostPageWrapper>
-                <PostImg
-                    src='http://localhost:5000/uploads/camera_50.png'
-                    loading='lazy'
-                />
+                {post.imageUrl && (
+                    <PostImg
+                        src={`${BASE_URL}${post.imageUrl}`}
+                        loading='lazy'
+                    />
+                )}
                 <PostUserInfo>
-                    <Avatar src={post?.user.avatarUrl} loading='lazy' />
+                    <Avatar src={post.user.avatarUrl} loading='lazy' />
                     <AvatarInfo>
-                        <UserName>{post?.user.fullName}</UserName>
+                        <UserName>{post.user.fullName}</UserName>
                         <PostDate>{date.toDateString()}</PostDate>
                     </AvatarInfo>
                 </PostUserInfo>
                 <PostInfo>
-                    <PostTitle>{post?.title}</PostTitle>
+                    <PostTitle>{post.title}</PostTitle>
                     <PostTagWrapper>
-                        {post?.tags?.map((tag, i) => {
+                        {post.tags.map((tag, i) => {
                             return <PostTag key={i}>#{tag}</PostTag>;
                         })}
                     </PostTagWrapper>
-                    <PostTextWrapper>{post?.text}</PostTextWrapper>
+                    <PostTextWrapper>
+                        <ReactMarkdown children={post?.text} />
+                    </PostTextWrapper>
                     <IconsWrapper>
                         <IconWrapper>
                             <svg

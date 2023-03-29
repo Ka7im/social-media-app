@@ -1,20 +1,44 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAppDispatch } from '../redux/redux-hook';
+import { fetchRemovePost } from '../redux/slices/postsSlice/postsSlice';
 import { IPost } from '../types/Post';
+import { BASE_URL } from '../utils/consts';
 
 export const PostWrapper = styled.div`
     border: 1px solid #424242;
     background-color: ${(props) => props.theme.dark.component};
     border-radius: 10px;
     padding: 20px;
-    cursor: pointer;
     min-width: 100%;
+    position: relative;
+
+    &:hover {
+        border: 1px solid #71aaeb;
+    }
+`;
+
+const PostEditRemoveWrapper = styled.div`
+    display: flex;
+    column-gap: 10px;
+    position: absolute;
+    cursor: pointer;
+    top: 25px;
+    right: 25px;
+`;
+
+const PostIconWrapper = styled.div`
+    transition: 0.5s ease all;
+
+    &:hover {
+        transform: scale(1.2);
+    }
 `;
 
 export const PostImg = styled.img`
     border-radius: 10px;
     width: 100%;
-    max-height: 500px;
+    max-height: 350px;
     margin-bottom: 15px;
     object-fit: cover;
 `;
@@ -83,22 +107,90 @@ export const IconInfo = styled.div`
     align-self: center;
 `;
 
+type PostProps = IPost & { isOwner: boolean };
+
 export const Post = ({
     _id,
     tags,
     title,
     viewsCount,
-    updatedAt,
+    createdAt,
+    imageUrl,
     user: { avatarUrl, fullName },
-}: IPost) => {
-    const date = new Date(updatedAt);
+    isOwner,
+}: PostProps) => {
+    const dispatch = useAppDispatch();
+
+    const date = new Date(createdAt);
     return (
         <PostWrapper>
+            {isOwner && (
+                <PostEditRemoveWrapper>
+                    <Link to={`${_id}/edit`}>
+                        <PostIconWrapper>
+                            <svg
+                                width='30px'
+                                height='30px'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                xmlns='http://www.w3.org/2000/svg'
+                                stroke='#000000'
+                            >
+                                <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
+                                <g
+                                    id='SVGRepo_tracerCarrier'
+                                    stroke-linecap='round'
+                                    stroke-linejoin='round'
+                                ></g>
+                                <g id='SVGRepo_iconCarrier'>
+                                    {' '}
+                                    <path
+                                        d='M18.3785 8.44975L8.9636 17.8648C8.6844 18.144 8.3288 18.3343 7.94161 18.4117L4.99988 19.0001L5.58823 16.0583C5.66566 15.6711 5.85597 15.3155 6.13517 15.0363L15.5501 5.62132M18.3785 8.44975L19.7927 7.03553C20.1832 6.64501 20.1832 6.01184 19.7927 5.62132L18.3785 4.20711C17.988 3.81658 17.3548 3.81658 16.9643 4.20711L15.5501 5.62132M18.3785 8.44975L15.5501 5.62132'
+                                        stroke='#71aaeb'
+                                        stroke-width='2'
+                                        stroke-linecap='round'
+                                        stroke-linejoin='round'
+                                    ></path>{' '}
+                                </g>
+                            </svg>
+                        </PostIconWrapper>
+                    </Link>
+                    <PostIconWrapper
+                        onClick={() => dispatch(fetchRemovePost(_id))}
+                    >
+                        <svg
+                            width='30px'
+                            height='30px'
+                            viewBox='0 0 24 24'
+                            fill='none'
+                            xmlns='http://www.w3.org/2000/svg'
+                        >
+                            <g
+                                id='SVGRepo_bgCaredrediered'
+                                stredoke-width='0'
+                            ></g>
+                            <g
+                                id='SVGRepo_tredaceredCaredrediered'
+                                stredoke-linecap='redound'
+                                stredoke-linejoin='redound'
+                            ></g>
+                            <g id='SVGRepo_iconCaredrediered'>
+                                <path
+                                    fill-redule='evenodd'
+                                    clip-redule='evenodd'
+                                    d='M19.207 6.207a1 1 0 0 0-1.414-1.414L12 10.586 6.207 4.793a1 1 0 0 0-1.414 1.414L10.586 12l-5.793 5.793a1 1 0 1 0 1.414 1.414L12 13.414l5.793 5.793a1 1 0 0 0 1.414-1.414L13.414 12l5.793-5.793z'
+                                    fill='red'
+                                ></path>
+                            </g>
+                        </svg>
+                    </PostIconWrapper>
+                </PostEditRemoveWrapper>
+            )}
             <Link to={`${_id}`} style={{ textDecoration: 'none' }}>
-                <PostImg
-                    src='http://localhost:5000/uploads/camera_50.png'
-                    loading='lazy'
-                />
+                {imageUrl && (
+                    <PostImg src={`${BASE_URL}${imageUrl}`} loading='lazy' />
+                )}
+
                 <PostUserInfo>
                     <Avatar src={avatarUrl} loading='lazy' />
                     <AvatarInfo>

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const TagsWrapper = styled.div`
+export const TagsWrapper = styled.div`
     display: flex;
     align-items: flex-start;
     row-gap: 5px;
@@ -13,7 +13,7 @@ const TagsWrapper = styled.div`
     padding: 20px;
 `;
 
-const TagsTitle = styled.div`
+export const TagsTitle = styled.div`
     color: #fff;
     font-weight: 500;
     font-size: 22px;

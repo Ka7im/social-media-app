@@ -7,13 +7,13 @@ const Flex = styled.div`
     flex-wrap: wrap;
 `;
 
-const ButtonTitle = styled.div`
+export const ButtonTitle = styled.div`
     color: #fff;
     align-self: center;
     font-size: 13px;
 `;
 
-const IconWrapper = styled.div`
+export const IconWrapper = styled.div`
     align-self: center;
     justify-self: center;
     padding-top: 3px;
@@ -21,7 +21,6 @@ const IconWrapper = styled.div`
 
 const ButtonsWrapper = styled.div`
     width: 100%;
-    
 `;
 
 const Sidebar = () => {
