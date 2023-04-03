@@ -6,7 +6,7 @@ export const TagsWrapper = styled.div`
     align-items: flex-start;
     row-gap: 5px;
     flex-wrap: wrap;
-    border: 1px solid ${(props) => props.theme.dark.text};
+    border: 1px solid ${(props) => props.theme.dark.hover};
     background-color: ${(props) => props.theme.dark.component};
     border-radius: 10px;
     height: max-content;

@@ -15,6 +15,10 @@ const Global = createGlobalStyle`
         box-sizing: border-box;
     }
 
+    * ::-webkit-scrollbar {
+        display: none;
+    }
+
     body {
         background-color: ${(props) => props.theme.dark.main}
     }

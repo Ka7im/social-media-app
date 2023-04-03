@@ -6,6 +6,34 @@ import { checkAuth, handleValidationErrors } from './middleware/index.js';
 import { UserController, PostController } from './controllers/index.js';
 import { postCreateValidation } from './validations/post.js';
 import cors from 'cors';
+import { WebSocketServer } from 'ws';
+
+const wss = new WebSocketServer(
+    {
+        port: 5001,
+    },
+    () => console.log(`Server started on 5001`)
+);
+
+wss.on('connection', function connnection(ws) {
+    ws.on('message', function (message) {
+        message = JSON.parse(message);
+
+        switch (message.event) {
+            case 'message':
+                broadcastMessage(message);
+                break;
+            case 'connection':
+                break;
+        }
+    });
+});
+
+function broadcastMessage(message) {
+    wss.clients.forEach((client) => {
+        client.send(JSON.stringify(message));
+    });
+}
 
 mongoose
     .connect('mongodb://localhost:27017/social-media-app')

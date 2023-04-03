@@ -13,7 +13,9 @@ class PostController {
                 .flat()
                 .slice(0, 5);
 
-            res.json(tags);
+            const tagsSet = new Set(tags);
+
+            res.json(Array.from(tagsSet));
         } catch (error) {
             console.log(error);
             res.status(500).json({
@@ -24,12 +26,19 @@ class PostController {
 
     async getAll(req, res) {
         try {
+            const { limit, page } = req.query;
+
+            let offset = limit * page - limit;
+            const count = await PostModel.countDocuments({});
+
             const posts = await PostModel.find()
                 .populate('user')
+                .skip(offset)
+                .limit(limit)
                 .sort('-updatedAt')
                 .exec();
 
-            res.json(posts);
+            res.json({ posts, count });
         } catch (error) {
             console.log(error);
             res.status(500).json({

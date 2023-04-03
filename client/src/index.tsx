@@ -10,7 +10,7 @@ const theme: DefaultTheme = {
     dark: {
         component: '#222222',
         text: '#6f6f6f',
-        hover: '#333333',
+        hover: '#6f6f6f',
         main: '#141414',
     },
 };

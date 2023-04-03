@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Button } from '../components/Button';
 import { ButtonWithIcon } from '../components/ButtonWithIcon';
 import Layout from '../components/Layout';
 import Post, { PostWrapper } from '../components/Post';
@@ -17,18 +16,24 @@ import {
 import {
     fetchPosts,
     fetchTags,
+    increasePage,
     Status,
 } from '../redux/slices/postsSlice/postsSlice';
 import {
+    getPostCountSelector,
+    getPostLimitSelector,
+    getPostPageSelector,
     getPostsSelector,
     getPostStatusSelector,
     getTagsStatusSelector,
 } from '../redux/slices/postsSlice/selectors';
+import useScroll from '../utils/hooks/useScroll';
 
 const PostsWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     row-gap: 20px;
+    justify-content: center;
 `;
 
 const PostsSidebar = styled.div`
@@ -64,16 +69,39 @@ const CreatePostWrapper = styled.div`
     padding: 20px;
 `;
 
+const Observable = styled.div`
+    height: 40px;
+    width: 40px;
+    display: flex;
+    justify-content: center;
+`;
+
 const Posts = () => {
     const { posts, tags } = useAppSelector(getPostsSelector);
     const postStatus = useAppSelector(getPostStatusSelector);
     const tagsStatus = useAppSelector(getTagsStatusSelector);
     const isAuth = useAppSelector(isAuthSelector);
     const userData = useAppSelector(getUserDataSelector);
+    const page = useAppSelector(getPostPageSelector);
+    const count = useAppSelector(getPostCountSelector);
+    const limit = useAppSelector(getPostLimitSelector);
     const dispatch = useAppDispatch();
 
+    const observable = useRef(null);
+
+    const onIntersect = useCallback(() => {
+        if (page < Math.ceil(count / limit)) {
+            dispatch(increasePage());
+        }
+    }, [count, limit, page]);
+
+    useScroll(observable, onIntersect);
+
     useEffect(() => {
-        dispatch(fetchPosts());
+        dispatch(fetchPosts({ page }));
+    }, [page]);
+
+    useEffect(() => {
         dispatch(fetchTags());
     }, []);
 
@@ -85,7 +113,7 @@ const Posts = () => {
         <Layout>
             <>
                 <PostsWrapper>
-                    {postStatus === Status.Loading
+                    {postStatus === Status.FirstLoading
                         ? [...new Array(3)].map((item, i) => {
                               return (
                                   <PostWrapper key={i}>
@@ -102,6 +130,37 @@ const Posts = () => {
                                   />
                               );
                           })}
+
+                    <Observable ref={observable}>
+                        {postStatus === Status.Loading && (
+                            <svg
+                                xmlns='http://www.w3.org/2000/svg'
+                                width='40px'
+                                height='40px'
+                                viewBox='0 0 100 100'
+                                preserveAspectRatio='xMidYMid'
+                            >
+                                <circle
+                                    cx='50'
+                                    cy='50'
+                                    fill='none'
+                                    stroke='#71aaeb'
+                                    stroke-width='10'
+                                    r='35'
+                                    stroke-dasharray='164.93361431346415 56.97787143782138'
+                                >
+                                    <animateTransform
+                                        attributeName='transform'
+                                        type='rotate'
+                                        repeatCount='indefinite'
+                                        dur='1s'
+                                        values='0 50 50;360 50 50'
+                                        keyTimes='0;1'
+                                    />
+                                </circle>
+                            </svg>
+                        )}
+                    </Observable>
                 </PostsWrapper>
 
                 <PostsSidebar>

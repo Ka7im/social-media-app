@@ -1,8 +1,9 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
+import { BASE_URL } from '../utils/consts';
 
-const $host = axios.create({ baseURL: 'http://localhost:5000' });
+const $host = axios.create({ baseURL: BASE_URL });
 
-const $authHost = axios.create({ baseURL: 'http://localhost:5000' });
+const $authHost = axios.create({ baseURL: BASE_URL });
 
 const authInterceptor = (config: InternalAxiosRequestConfig) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;

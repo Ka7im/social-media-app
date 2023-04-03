@@ -6,7 +6,7 @@ import { IPost } from '../types/Post';
 import { BASE_URL } from '../utils/consts';
 
 export const PostWrapper = styled.div`
-    border: 1px solid #424242;
+    border: 1px solid ${(props) => props.theme.dark.hover};
     background-color: ${(props) => props.theme.dark.component};
     border-radius: 10px;
     padding: 20px;
@@ -192,7 +192,7 @@ export const Post = ({
                 )}
 
                 <PostUserInfo>
-                    <Avatar src={avatarUrl} loading='lazy' />
+                    <Avatar src={avatarUrl} />
                     <AvatarInfo>
                         <UserName>{fullName}</UserName>
                         <PostDate>{date.toDateString()}</PostDate>
