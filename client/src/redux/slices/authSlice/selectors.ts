@@ -1,3 +1,4 @@
+import { Root } from 'react-markdown/lib/rehype-filter';
 import { RootState } from '../../store';
 
 export const isAuthSelector = (state: RootState) => {
@@ -11,3 +12,7 @@ export const getUserDataSelector = (state: RootState) => {
 export const getUserNameSelector = (state: RootState) => {
     return state.auth.data?.fullName;
 };
+
+export const getUserIdSelector = (state: RootState) => {
+    return state.auth.data?._id;
+}

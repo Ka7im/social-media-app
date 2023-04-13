@@ -35,9 +35,8 @@ class PostController {
                 .populate('user')
                 .skip(offset)
                 .limit(limit)
-                .sort('-updatedAt')
+                .sort('-createdAt')
                 .exec();
-
             res.json({ posts, count });
         } catch (error) {
             console.log(error);
@@ -90,8 +89,7 @@ class PostController {
                 user: req.userId,
             });
 
-            const post = await doc.save();
-
+            const post = await (await doc.save()).populate('user');
             res.json(post);
         } catch (error) {
             console.log(error);

@@ -34,12 +34,13 @@ const Mess = styled.div`
 type MessageProps = {
     message: string;
     userName: string;
+    avatarUrl: string;
 };
 
-const Message = ({ message, userName }: MessageProps) => {
+const Message = ({ message, userName, avatarUrl }: MessageProps) => {
     return (
         <MessageWrapper>
-            <Avatar src={`${BASE_URL}/uploads/106960355.jpg`} />
+            <Avatar src={avatarUrl} />
             <InfoWrapper>
                 <UserName>{userName}</UserName>
                 <Mess>{message}</Mess>

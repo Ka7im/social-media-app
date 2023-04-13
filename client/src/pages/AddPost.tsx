@@ -11,7 +11,7 @@ import { Button } from '../components/Button';
 import { Container } from '../components/Container';
 import 'easymde/dist/easymde.min.css';
 import './addPost.css';
-import { useAppSelector } from '../redux/redux-hook';
+import {useAppDispatch, useAppSelector} from '../redux/redux-hook';
 import { isAuthSelector } from '../redux/slices/authSlice/selectors';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { PostImg } from '../components/Post';
@@ -19,6 +19,7 @@ import { $authHost } from '../axios/axios';
 import { BASE_URL } from '../utils/consts';
 import Spinner from '../components/Spinner';
 import { IPost } from '../types/Post';
+import { fetchPosts } from '../redux/slices/postsSlice/postsSlice';
 
 const AddPostContainer = styled(Container)`
     width: 800px;
@@ -72,6 +73,7 @@ const AddPost = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const { id } = useParams();
+    const dispatch = useAppDispatch();
 
     const isEditing = Boolean(id);
 
@@ -90,11 +92,17 @@ const AddPost = () => {
                 text,
             };
 
-            const { data } = isEditing
-                ? await $authHost.patch(`/posts/${id}`, fields)
-                : await $authHost.post('/posts', fields);
+            let res;
 
-            const _id = isEditing ? id : data._id;
+            if (isEditing) {
+                res = await $authHost.patch(`/posts/${id}`, fields);
+            } else {
+                res = await $authHost.post('/posts', fields);
+            }
+
+            dispatch(fetchPosts({ page: 1 }));
+
+            const _id = isEditing ? id : res.data._id;
             navigate(`/${_id}`);
         } catch (error) {
             console.warn(error);
@@ -199,3 +207,4 @@ const AddPost = () => {
 };
 
 export default AddPost;
+

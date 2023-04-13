@@ -7,7 +7,8 @@ import AddPost from './pages/AddPost';
 import Authorization from './pages/Authorization';
 import ChatPage from './pages/ChatPage';
 import Posts from './pages/Posts';
-import { CHAT_PAGE, POST_PAGE } from './utils/consts';
+import { CHAT_PAGE, MESSAGES_PAGE, POST_PAGE } from './utils/consts';
+import Messages from './pages/Messages';
 
 const PostPage = lazy(() => import('./pages/PostPage'));
 
@@ -19,6 +20,7 @@ const routes = createRoutesFromElements(
         <Route path='add-post' element={<AddPost />} />
         <Route path='/:id/edit' element={<AddPost />} />
         <Route path={CHAT_PAGE} element={<ChatPage />} />
+        <Route path={MESSAGES_PAGE} element={<Messages />} />
         <Route
             path='/:id'
             element={

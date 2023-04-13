@@ -5,6 +5,7 @@ declare module 'styled-components' {
         dark: {
             component: string;
             text: string;
+            selected: string;
             hover: string;
             main: string;
         };

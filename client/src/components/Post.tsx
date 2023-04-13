@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAppDispatch } from '../redux/redux-hook';
-import { fetchRemovePost } from '../redux/slices/postsSlice/postsSlice';
+import {
+    fetchRemovePost,
+    fetchTags,
+} from '../redux/slices/postsSlice/postsSlice';
 import { IPost } from '../types/Post';
 import { BASE_URL } from '../utils/consts';
 
@@ -156,7 +159,10 @@ export const Post = ({
                         </PostIconWrapper>
                     </Link>
                     <PostIconWrapper
-                        onClick={() => dispatch(fetchRemovePost(_id))}
+                        onClick={async () => {
+                            await dispatch(fetchRemovePost(_id));
+                            dispatch(fetchTags());
+                        }}
                     >
                         <svg
                             width='30px'

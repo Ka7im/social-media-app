@@ -42,10 +42,10 @@ const initialState: IPostsSlice = {
 export const fetchPosts = createAsyncThunk(
     'posts/fetchPosts',
     async ({
-        page,
+        page = 1,
         limit = 5,
     }: {
-        page: IPostsSlice['posts']['page'];
+        page?: IPostsSlice['posts']['page'];
         limit?: IPostsSlice['posts']['limit'];
     }) => {
         const { data } = await $host.get('/posts', {
@@ -95,14 +95,38 @@ const postsSlice = createSlice({
                 }
             })
             .addCase(fetchPosts.fulfilled, (state, action) => {
-                if (
-                    action.payload.posts.at(-1)?._id !==
-                    state.posts.items.at(-1)?._id
-                ) {
-                    state.posts.items = state.posts.items.concat(
-                        action.payload.posts
-                    );
+                const newPosts = [];
+
+                for (let i = 0; i < action.payload.posts.length; i++) {
+                    let isEqual = false;
+                    for (let j = 0; j < state.posts.items.length; j++) {
+                        if (
+                            state.posts.items[j]._id ===
+                            action.payload.posts[i]._id
+                        ) {
+                            isEqual = true;
+                            break;
+                        }
+                    }
+
+                    if (!isEqual) {
+                        newPosts.push(action.payload.posts[i]);
+                    }
                 }
+
+                for (let i = newPosts.length - 1; i >= 0; i--) {
+                    state.posts.items.unshift(newPosts[i]);
+                }
+
+                state.posts.items.sort((a, b) => {
+                    const firstDate = new Date(a.createdAt);
+                    const secondDate = new Date(b.createdAt);
+
+                    if (firstDate > secondDate) return -1;
+                    if (firstDate === secondDate) return 0;
+                    return 1;
+                });
+
                 state.posts.count = action.payload.count;
                 state.posts.status = Status.Success;
             })
@@ -125,20 +149,6 @@ const postsSlice = createSlice({
                 state.posts.items = state.posts.items.filter(
                     (post) => post._id !== action.payload.id
                 );
-                state.tags.items = state.tags.items.filter((tag) => {
-                    let isEqual = true;
-
-                    if (tag.length === action.payload.tags.length) {
-                        for (let i = 0; i < tag.length; i++) {
-                            if (tag[i] !== action.payload.tags[i]) {
-                                isEqual = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    return !isEqual;
-                });
             });
     },
 });

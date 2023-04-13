@@ -33,7 +33,12 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
 
 export const fetchRegister = createAsyncThunk(
     'auth/fetchRegister',
-    async (values: { email: string; password: string; fullName: string; avatarUrl: string }) => {
+    async (values: {
+        email: string;
+        password: string;
+        fullName: string;
+        avatarUrl: string;
+    }) => {
         const { data } = await $host.post('/auth/register', values);
 
         localStorage.setItem('token', data.token);

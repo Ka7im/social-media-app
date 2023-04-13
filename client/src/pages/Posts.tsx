@@ -103,7 +103,7 @@ const Posts = () => {
 
     useEffect(() => {
         dispatch(fetchTags());
-    }, []);
+    }, [page]);
 
     if (!isAuth) {
         return <Navigate to='/login' />;

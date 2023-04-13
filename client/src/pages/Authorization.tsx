@@ -109,7 +109,9 @@ const isString = (param: any): param is string => {
 };
 
 const Authorization = () => {
-    const [avatarUrl, setAvatarUrl] = useState('');
+    const [avatarUrl, setAvatarUrl] = useState(
+        `${BASE_URL}/uploads/camera_50.png`
+    );
     const [isAfterSubmit, setIsAfterSubmit] = useState(false);
     const isAuth = useAppSelector(isAuthSelector);
     const dispatch = useAppDispatch();
