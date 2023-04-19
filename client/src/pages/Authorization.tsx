@@ -163,7 +163,7 @@ const Authorization = () => {
                             password: string;
                             fullName: string;
                         }),
-                        avatarUrl: `${BASE_URL}${avatarUrl}`,
+                        avatarUrl,
                     })
                 );
                 setIsAfterSubmit(true);
@@ -217,7 +217,7 @@ const Authorization = () => {
             />
             <AuthAvatar
                 src={
-                    (avatarUrl && `${BASE_URL}${avatarUrl}`) ||
+                    (avatarUrl && `${avatarUrl}`) ||
                     `${BASE_URL}/uploads/camera_50.png`
                 }
                 onClick={() => {

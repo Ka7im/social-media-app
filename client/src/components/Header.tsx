@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
 import { logout } from '../redux/slices/authSlice/authSlice';
 import { isAuthSelector } from '../redux/slices/authSlice/selectors';
 import { Button } from './Button';
 import { Container } from './Container';
-
+import Search from './Search';
+import { log } from 'console';
 
 const HeaderWrapper = styled.header`
     display: flex;
@@ -33,10 +34,15 @@ const Logo = styled.h1`
     font-weight: 700;
 `;
 
-
 const Header = () => {
     const isAuth = useAppSelector(isAuthSelector);
+    const location = useLocation();
     const dispatch = useAppDispatch();
+
+    const isAuthOrRegisterPage =
+        location.pathname === '/authorization' || location.pathname === '/login'
+            ? true
+            : false;
 
     const onClickLogout = () => {
         dispatch(logout());
@@ -48,6 +54,7 @@ const Header = () => {
                     <Link to='/' style={{ textDecoration: 'none' }}>
                         <Logo>SOCIAPEDIA</Logo>
                     </Link>
+                    {!isAuthOrRegisterPage && <Search />}
                     <ButtonWrapper>
                         {isAuth ? (
                             <Link

@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import { IUser } from '../types/User';
 
@@ -24,7 +23,7 @@ const DialogWrapper = styled.div`
     }
 `;
 
-const Avatar = styled.img`
+export const DialogAvatar = styled.img`
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -32,12 +31,12 @@ const Avatar = styled.img`
     margin-right: 15px;
 `;
 
-const DialogInfo = styled.div`
+export const DialogInfo = styled.div`
     display: grid;
     row-gap: 5px;
 `;
 
-const UserName = styled.div`
+export const DialogUserName = styled.div`
     color: #71aaeb;
     font-weight: 700;
     font-size: 14px; ;
@@ -57,9 +56,9 @@ type DialogProps = {
 const Dialog = ({ onClick, userData }: DialogProps) => {
     return (
         <DialogWrapper onClick={onClick}>
-            <Avatar src={userData.avatarUrl} />
+            <DialogAvatar src={userData.avatarUrl} />
             <DialogInfo>
-                <UserName>{userData.fullName}</UserName>
+                <DialogUserName>{userData.fullName}</DialogUserName>
                 <Mess>Message</Mess>
             </DialogInfo>
         </DialogWrapper>

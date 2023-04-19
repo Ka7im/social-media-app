@@ -5,7 +5,6 @@ class MessageController {
     async create(data) {
         try {
             const { message, imageUrl, from, to } = data;
-            
 
             const doc = new MessageModel({ message, imageUrl, from, to });
 
@@ -91,6 +90,46 @@ class MessageController {
         }
 
         res.send(users.flat());
+    }
+
+    async newMessage(req, res) {
+        try {
+            const { message, imageUrl, to } = req.body;
+
+            const from = req.userId;
+
+            const doc = new MessageModel({ message, imageUrl, from, to });
+
+            const newMessage = await (
+                await (await doc.save()).populate('from')
+            ).populate('to');
+
+            res.send({
+                message: newMessage.message,
+                to: {
+                    _id: newMessage.to._id,
+                    fullName: newMessage.to.fullName,
+                    email: newMessage.to.email,
+                    avatarUrl: newMessage.to.avatarUrl,
+                    createdAt: newMessage.to.createdAt,
+                    updatedAt: newMessage.to.updatedAt,
+                    __v: newMessage.to.__v,
+                },
+                from: {
+                    _id: newMessage.from._id,
+                    fullName: newMessage.from.fullName,
+                    email: newMessage.from.email,
+                    avatarUrl: newMessage.from.avatarUrl,
+                    createdAt: newMessage.from.createdAt,
+                    updatedAt: newMessage.from.updatedAt,
+                    __v: newMessage.from.__v,
+                },
+                createdAt: newMessage.createdAt,
+                updatedAt: newMessage.updatedAt,
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

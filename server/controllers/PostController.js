@@ -1,4 +1,5 @@
 import PostModel from '../models/Post.js';
+import CommentModel from '../models/Comment.js';
 
 class PostController {
     async getLastTags(req, res) {
@@ -104,6 +105,8 @@ class PostController {
             const { id } = req.params;
 
             const post = await PostModel.findByIdAndDelete({ _id: id });
+
+            await CommentModel.deleteMany({ post: id });
 
             if (!post) {
                 res.status(500).json({ message: 'Статья не найдена' });

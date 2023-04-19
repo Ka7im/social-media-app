@@ -47,6 +47,7 @@ const Messages = () => {
     const [dialogs, setDialogs] = useState<IUser[]>([]);
     const [to, setTo] = useState('');
     const socket = useRef<WebSocket>();
+    const lastMessage = useRef<HTMLDivElement>();
     const dispatch = useAppDispatch();
     const userId = useAppSelector(getUserIdSelector);
     const messages = useAppSelector(getMessagesSelector);

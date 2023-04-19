@@ -1,8 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
-import { BASE_URL } from '../utils/consts';
 
-const MessageWrapper = styled.li`
+export const MessageWrapper = styled.li`
     display: flex;
     column-gap: 15px;
     width: 100%;

@@ -3,7 +3,7 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { useDispatch } from 'react-redux';
 import { Navigate, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { $host } from '../axios/axios';
+import { $authHost, $host } from '../axios/axios';
 import { Container } from '../components/Container';
 import {
     Avatar,
@@ -24,9 +24,16 @@ import {
 import Spinner from '../components/Spinner';
 import { IPost } from '../types/Post';
 import { BASE_URL } from '../utils/consts';
+import AddComment from '../components/AddComment';
+import Comment from '../components/Comment';
+import { IComment } from '../types/Comment';
+import CommentsList from '../components/CommentsList';
 
 const PostPageContainer = styled(Container)`
     width: 800px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
 `;
 
 const PostPageWrapper = styled.div`
@@ -64,6 +71,7 @@ const PostPage = () => {
             updatedAt: '',
         },
     });
+    const [comments, setComments] = useState<IComment[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const date = new Date(post?.updatedAt || '');
@@ -73,6 +81,15 @@ const PostPage = () => {
             setPost(res.data as IPost);
             setIsLoading(false);
         });
+        $authHost
+            .get(`/comments`, {
+                params: {
+                    id,
+                },
+            })
+            .then((res) => {
+                setComments(res.data as IComment[]);
+            });
     }, []);
 
     if (isLoading) {
@@ -165,6 +182,12 @@ const PostPage = () => {
                     </IconsWrapper>
                 </PostInfo>
             </PostPageWrapper>
+            <CommentsList comments={comments} />
+            <AddComment
+                postId={post._id}
+                setComments={setComments}
+                comments={comments}
+            />
         </PostPageContainer>
     );
 };
