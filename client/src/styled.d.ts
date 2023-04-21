@@ -1,13 +1,17 @@
 import 'styled-components';
+import { ITheme, ThemeEnums } from './types/styled';
 
 declare module 'styled-components' {
-    export interface DefaultTheme {
-        dark: {
-            component: string;
-            text: string;
-            selected: string;
+    export interface DefaultTheme extends ITheme {
+        type: ThemeEnums;
+        colors: {
+            componentBg: string;
+            font: string;
+            bg: string;
             hover: string;
-            main: string;
+            border: string;
+            input: string;
         };
     }
 }
+export { ThemeEnums };

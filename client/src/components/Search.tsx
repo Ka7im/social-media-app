@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { $host } from '../axios/axios';
 import { IUser } from '../types/User';
@@ -10,23 +10,23 @@ const SearchWrapper = styled.div`
 `;
 
 const SearchInput = styled.input`
-    background-color: ${(props) => props.theme.dark.component};
-    border: 1px solid #fff;
-    color: #fff;
+    background-color: ${(props) => props.theme.colors.componentBg};
+    border: 1px solid ${(props) => props.theme.colors.font};
+    color: ${(props) => props.theme.colors.font};
     outline: none;
     padding: 10px;
     border-radius: 10px;
     width: 280px;
 
     &::placeholder {
-        color: #fff;
+        color: ${(props) => props.theme.colors.font};
     }
 `;
 
 const UsersWrapper = styled.ul`
     position: absolute;
-    background-color: ${(props) => props.theme.dark.component};
-    border: 1px solid ${(props) => props.theme.dark.hover};
+    background-color: ${(props) => props.theme.colors.componentBg};
+    border: 1px solid ${(props) => props.theme.colors.font};
     border-radius: 10px;
     z-index: 10;
     display: flex;
@@ -44,7 +44,7 @@ const User = styled.li`
 `;
 
 const UserName = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
 `;
 
 const MessageIcon = styled.div`
@@ -57,7 +57,7 @@ const MessageIcon = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.dark.hover};
+        background-color: ${(props) => props.theme.colors.hover};
     }
 `;
 
@@ -86,6 +86,7 @@ const Search = () => {
     return (
         <SearchWrapper>
             <SearchInput
+                id='searchInput'
                 placeholder='Поиск'
                 value={value}
                 onChange={handleChange}

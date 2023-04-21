@@ -25,8 +25,8 @@ const DialogSidebar = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    border: 1px solid ${(props) => props.theme.dark.hover};
-    background: ${(props) => props.theme.dark.component};
+    border: 1px solid ${(props) => props.theme.colors.border};
+    background: ${(props) => props.theme.colors.componentBg};
     border-radius: 10px;
     height: min-content;
     max-height: calc(100vh - 128px);
@@ -34,7 +34,7 @@ const DialogSidebar = styled.div`
 `;
 
 const SelectChat = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     font-size: 20px;
     font-weight: 700;
     text-align: center;

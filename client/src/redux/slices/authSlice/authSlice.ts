@@ -2,15 +2,20 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { $authHost, $host } from '../../../axios/axios';
 import { IUser } from '../../../types/User';
 import { Status } from '../postsSlice/postsSlice';
+import { ThemeEnums } from '../../../types/styled';
+import { DefaultTheme } from 'styled-components';
+import { darkTheme, lightTheme } from '../../../utils/theme';
 
 interface IAuthSlice {
     data: IUser | null;
     status: Status;
+    theme: DefaultTheme;
 }
 
 const initialState: IAuthSlice = {
     data: null,
     status: Status.Loading,
+    theme: lightTheme,
 };
 
 export const fetchAuth = createAsyncThunk(
@@ -53,6 +58,11 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        toggleTheme: (state) => {
+            state.theme.type === ThemeEnums.light
+                ? (state.theme = darkTheme)
+                : (state.theme = lightTheme);
+        },
         logout: (state) => {
             state.data = null;
             localStorage.removeItem('token');
@@ -101,4 +111,4 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { logout } = authSlice.actions;
+export const { logout, toggleTheme } = authSlice.actions;

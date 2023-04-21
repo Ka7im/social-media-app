@@ -18,14 +18,14 @@ const InfoWrapper = styled.div`
 `;
 
 const UserName = styled.div`
-    color: #71aaeb;
+    color: ${(props) => props.theme.mainColor};
     font-weight: 700;
     font-size: 12.5px;
 `;
 
 const Mess = styled.div`
     font-size: 15px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     font-weight: 400;
 `;
 

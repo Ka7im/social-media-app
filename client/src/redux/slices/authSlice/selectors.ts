@@ -15,4 +15,8 @@ export const getUserNameSelector = (state: RootState) => {
 
 export const getUserIdSelector = (state: RootState) => {
     return state.auth.data?._id;
-}
+};
+
+export const getThemeSelector = (state: RootState) => {
+    return state.auth.theme;
+};

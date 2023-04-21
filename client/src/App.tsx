@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import Header from './components/Header';
 import Layout from './components/Layout';
 import { useAppDispatch, useAppSelector } from './redux/redux-hook';
 import { checkAuth } from './redux/slices/authSlice/authSlice';
-import { isAuthSelector } from './redux/slices/authSlice/selectors';
+import {
+    getThemeSelector,
+    isAuthSelector,
+} from './redux/slices/authSlice/selectors';
 
 const Global = createGlobalStyle`
     *{
@@ -20,11 +23,12 @@ const Global = createGlobalStyle`
     }
 
     body {
-        background-color: ${(props) => props.theme.dark.main}
+        background-color: ${(props) => props.theme.colors.bg}
     }
 `;
 
 const App = () => {
+    const theme = useAppSelector(getThemeSelector);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -32,11 +36,11 @@ const App = () => {
     }, []);
 
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Global />
             <Header />
             <Outlet />
-        </>
+        </ThemeProvider>
     );
 };
 

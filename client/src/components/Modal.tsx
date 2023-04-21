@@ -32,7 +32,7 @@ interface IModalContent {
 }
 const ModalContent = styled.div<IModalContent>`
     border-radius: 12px;
-    background-color: ${(props) => props.theme.dark.component};
+    background-color: ${(props) => props.theme.colors.componentBg};
     width: 30vw;
     transform ${(props) => (props.isActive ? 'scale(1)' : 'scale(0.5)')}
 `;

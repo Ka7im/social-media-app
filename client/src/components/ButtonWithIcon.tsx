@@ -10,6 +10,6 @@ export const ButtonWithIcon = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.dark.hover};
+        background-color: ${(props) => props.theme.colors.hover};
     }
 `;

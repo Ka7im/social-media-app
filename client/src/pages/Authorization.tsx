@@ -16,15 +16,15 @@ const AuthWrapper = styled.form`
     flex-wrap: wrap;
     margin: 70px auto;
     width: 300px;
-    border: 1px solid ${(props) => props.theme.dark.text};
-    background-color: ${(props) => props.theme.dark.component};
+    border: 1px solid ${(props) => props.theme.colors.border};
+    background-color: ${(props) => props.theme.colors.componentBg};
     border-radius: 15px;
 `;
 
 const AuthTitle = styled.div`
     font-weight: 700;
     font-size: 18px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     margin-bottom: 15px;
 `;
 
@@ -33,10 +33,10 @@ interface IInputProps {
 }
 
 const AuthInput = styled.input<IInputProps>`
-    background-color: #424242;
+    background-color: ${(props) => props.theme.colors.input};
     border: none;
     border-radius: 10px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     height: 30px;
     padding: 15px;
     outline: none;
@@ -48,10 +48,10 @@ const AuthInput = styled.input<IInputProps>`
 `;
 
 const FileInput = styled.input<IInputProps>`
-    background-color: #424242;
+    background-color: ${(props) => props.theme.colors.input};
     border: none;
     border-radius: 10px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     height: 50px;
     padding: 15px;
     outline: none;
@@ -66,14 +66,14 @@ const FileInput = styled.input<IInputProps>`
 const AuthSubTitle = styled.div`
     font-weight: 500;
     font-size: 15px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
 `;
 
 const AuthButton = styled.button`
     text-align: center;
     display: block;
-    border: 1px solid #fff;
-    color: #fff;
+    border: 1px solid ${(props) => props.theme.colors.font};
+    color: ${(props) => props.theme.colors.font};
     padding: 10px;
     border-radius: 15px;
     font-size: 14px;
@@ -84,7 +84,7 @@ const AuthButton = styled.button`
     background-color: transparent;
 
     &:hover {
-        background-color: ${(props) => props.theme.dark.hover};
+        background-color: ${(props) => props.theme.colors.hover};
     }
 `;
 

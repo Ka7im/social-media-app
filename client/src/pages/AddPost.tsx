@@ -11,7 +11,7 @@ import { Button } from '../components/Button';
 import { Container } from '../components/Container';
 import 'easymde/dist/easymde.min.css';
 import './addPost.css';
-import {useAppDispatch, useAppSelector} from '../redux/redux-hook';
+import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
 import { isAuthSelector } from '../redux/slices/authSlice/selectors';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { PostImg } from '../components/Post';
@@ -26,8 +26,8 @@ const AddPostContainer = styled(Container)`
 `;
 
 const AddPostWrapper = styled.div`
-    border: 1px solid #424242;
-    background-color: ${(props) => props.theme.dark.component};
+    border: 1px solid ${(props) => props.theme.colors.border};
+    background-color: ${(props) => props.theme.colors.componentBg};
     border-radius: 10px;
     padding: 20px;
     min-width: 100%;
@@ -38,7 +38,7 @@ const AddPostWrapper = styled.div`
 
 const TitleInput = styled.input`
     font-size: 32px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     background-color: transparent;
     border: none;
     outline: none;
@@ -46,7 +46,7 @@ const TitleInput = styled.input`
 
 const TagsInput = styled.input`
     font-size: 18px;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     background-color: transparent;
     border: none;
     outline: none;
@@ -207,4 +207,3 @@ const AddPost = () => {
 };
 
 export default AddPost;
-

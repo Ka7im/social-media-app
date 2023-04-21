@@ -4,28 +4,28 @@ import { $authHost } from '../axios/axios';
 import { IComment } from '../types/Comment';
 
 const AddCommentWrapper = styled.form`
-    background-color: ${(props) => props.theme.dark.component};
-    border: 1px solid #424242;
+    background-color: ${(props) => props.theme.colors.componentBg};
+    border: 1px solid ${(props) => props.theme.colors.border};
     border-radius: 10px;
     padding: 20px;
 `;
 
 const AddCommentInput = styled.input`
-    background-color: transparent;
+    background-color: ${(props) => props.theme.colors.input};
     width: 80%;
     border: none;
     padding: 5px;
     outline: none;
-    color: #fff;
-    border: 1px solid #424242;
+    color: ${(props) => props.theme.colors.font};
+    border: 1px solid ${(props) => props.theme.colors.border};
     border-radius: 10px;
     margin-right: 15px;
 `;
 
 const AddCommentButton = styled.button`
     border-radius: 10px;
-    border: none;
-    background-color: #fff;
+    border: 1px solid ${(props) => props.theme.colors.font};
+    background-color: transparent;
     padding: 5px 10px;
     cursor: pointer;
 `;

@@ -16,14 +16,14 @@ export const ChatInput = styled.input`
     height: 35px;
     outline: none;
     background-color: transparent;
-    border: 1px solid ${(props) => props.theme.dark.hover};
-    color: #fff;
+    border: 1px solid ${(props) => props.theme.colors.border};
+    color: ${(props) => props.theme.colors.font};
 `;
 
 export const ChatWrapper = styled.ul`
     border-radius: 10px 10px 0px 0px;
-    border: 1px solid ${(props) => props.theme.dark.hover};
-    background: ${(props) => props.theme.dark.component};
+    border: 1px solid ${(props) => props.theme.colors.border};
+    background: ${(props) => props.theme.colors.componentBg};
     height: calc(100vh - 128px);
     padding: 10px 50px;
     display: flex;
@@ -35,11 +35,11 @@ export const ChatWrapper = styled.ul`
 
 export const ChatInputWrapper = styled.form`
     height: 60px;
-    background: #292929;
+    background: ${(props) => props.theme.colors.componentBg};
     border-radius: 0px 0px 10px 10px;
-    border-right: 1px solid ${(props) => props.theme.dark.hover};
-    border-left: 1px solid ${(props) => props.theme.dark.hover};
-    border-bottom: 1px solid ${(props) => props.theme.dark.hover};
+    border-right: 1px solid ${(props) => props.theme.colors.border};
+    border-left: 1px solid ${(props) => props.theme.colors.border};
+    border-bottom: 1px solid ${(props) => props.theme.colors.border};
     display: flex;
     justify-content: center;
     align-items: center;

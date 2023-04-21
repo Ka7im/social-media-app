@@ -7,12 +7,11 @@ import { isAuthSelector } from '../redux/slices/authSlice/selectors';
 import { Button } from './Button';
 import { Container } from './Container';
 import Search from './Search';
-import { log } from 'console';
 
 const HeaderWrapper = styled.header`
     display: flex;
     align-items: center;
-    background-color: ${(props) => props.theme.dark.component};
+    background-color: ${(props) => props.theme.colors.componentBg};
     height: 48px;
     margin-bottom: 10px;
 `;
@@ -30,7 +29,7 @@ const ButtonWrapper = styled.div`
 `;
 
 const Logo = styled.h1`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     font-weight: 700;
 `;
 

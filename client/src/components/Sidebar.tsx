@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { CHAT_PAGE, MESSAGES_PAGE, POST_PAGE } from '../utils/consts';
 import { ButtonWithIcon } from './ButtonWithIcon';
+import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
+import { getThemeSelector } from '../redux/slices/authSlice/selectors';
+import { toggleTheme } from '../redux/slices/authSlice/authSlice';
 
 const Flex = styled.div`
     display: flex;
@@ -10,7 +13,7 @@ const Flex = styled.div`
 `;
 
 export const ButtonTitle = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     align-self: center;
     font-size: 13px;
 `;
@@ -26,6 +29,9 @@ const ButtonsWrapper = styled.div`
 `;
 
 const Sidebar = () => {
+    const dispatch = useAppDispatch();
+    const theme = useAppSelector(getThemeSelector);
+
     return (
         <Flex>
             <ButtonsWrapper>
@@ -184,8 +190,8 @@ const Sidebar = () => {
                     <ButtonWithIcon>
                         <IconWrapper>
                             <svg
-                                width='25px'
-                                height='25px'
+                                width='20px'
+                                height='20px'
                                 viewBox='0 0 24 24'
                                 fill='none'
                                 xmlns='http://www.w3.org/2000/svg'
@@ -210,6 +216,59 @@ const Sidebar = () => {
                         <ButtonTitle>Чат</ButtonTitle>
                     </ButtonWithIcon>
                 </Link>
+                <ButtonWithIcon onClick={() => dispatch(toggleTheme())}>
+                    <IconWrapper>
+                        <svg
+                            width='20px'
+                            height='20px'
+                            viewBox='0 0 20 20'
+                            version='1.1'
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='#000000'
+                        >
+                            <g id='SVGRepo_bgCarrier' stroke-width='0'></g>
+                            <g
+                                id='SVGRepo_tracerCarrier'
+                                stroke-linecap='round'
+                                stroke-linejoin='round'
+                            ></g>
+                            <g id='SVGRepo_iconCarrier'>
+                                {' '}
+                                <title>contrast [#71aaeb]</title>{' '}
+                                <desc>Created with Sketch.</desc> <defs> </defs>{' '}
+                                <g
+                                    id='Page-1'
+                                    stroke='none'
+                                    stroke-width='1'
+                                    fill='none'
+                                    fill-rule='evenodd'
+                                >
+                                    {' '}
+                                    <g
+                                        id='Dribbble-Light-Preview'
+                                        transform='translate(-180.000000, -4199.000000)'
+                                        fill={theme.colors.font}
+                                    >
+                                        {' '}
+                                        <g
+                                            id='icons'
+                                            transform='translate(56.000000, 160.000000)'
+                                        >
+                                            {' '}
+                                            <path
+                                                d='M126,4049 C126,4044.589 129.589,4041 134,4041 L134,4057 C129.589,4057 126,4053.411 126,4049 M134,4039 C128.477,4039 124,4043.477 124,4049 C124,4054.523 128.477,4059 134,4059 C139.523,4059 144,4054.523 144,4049 C144,4043.477 139.523,4039 134,4039'
+                                                id='contrast-[#71aaeb]'
+                                            >
+                                                {' '}
+                                            </path>{' '}
+                                        </g>{' '}
+                                    </g>{' '}
+                                </g>{' '}
+                            </g>
+                        </svg>
+                    </IconWrapper>
+                    <ButtonTitle>Сменить тему</ButtonTitle>
+                </ButtonWithIcon>
             </ButtonsWrapper>
         </Flex>
     );

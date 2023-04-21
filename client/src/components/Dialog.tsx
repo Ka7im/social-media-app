@@ -6,11 +6,11 @@ const DialogWrapper = styled.div`
     align-items: center;
     justify-content: flex-start;
     padding: 10px;
-    border-bottom: 1px solid ${(props) => props.theme.dark.hover};
+    border-bottom: 1px solid ${(props) => props.theme.colors.border};
     cursor: pointer;
 
     &:hover {
-        background: ${(props) => props.theme.dark.selected};
+        background: ${(props) => props.theme.colors.hover};
     }
 
     &:first-child {
@@ -37,15 +37,9 @@ export const DialogInfo = styled.div`
 `;
 
 export const DialogUserName = styled.div`
-    color: #71aaeb;
+    color: ${(props) => props.theme.mainColor};
     font-weight: 700;
     font-size: 14px; ;
-`;
-
-const Mess = styled.div`
-    font-size: 13px;
-    color: #fff;
-    font-weight: 400;
 `;
 
 type DialogProps = {
@@ -59,7 +53,6 @@ const Dialog = ({ onClick, userData }: DialogProps) => {
             <DialogAvatar src={userData.avatarUrl} />
             <DialogInfo>
                 <DialogUserName>{userData.fullName}</DialogUserName>
-                <Mess>Message</Mess>
             </DialogInfo>
         </DialogWrapper>
     );

@@ -6,22 +6,22 @@ export const TagsWrapper = styled.div`
     align-items: flex-start;
     row-gap: 5px;
     flex-wrap: wrap;
-    border: 1px solid ${(props) => props.theme.dark.hover};
-    background-color: ${(props) => props.theme.dark.component};
+    border: 1px solid ${(props) => props.theme.colors.border};
+    background-color: ${(props) => props.theme.colors.componentBg};
     border-radius: 10px;
     height: max-content;
     padding: 20px;
 `;
 
 export const TagsTitle = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     font-weight: 500;
     font-size: 22px;
     margin-bottom: 20px;
 `;
 
 const Tag = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     width: 100%;
     height: 30px;
     border-radius: 8px;
@@ -29,7 +29,7 @@ const Tag = styled.div`
     cursor: pointer;
 
     &:hover {
-        background-color: ${(props) => props.theme.dark.hover};
+        background-color: ${(props) => props.theme.colors.hover};
     }
 `;
 

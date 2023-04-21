@@ -7,10 +7,10 @@ import { IUser } from '../types/User';
 import { $authHost } from '../axios/axios';
 
 const ModalTitle = styled.div`
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     padding: 20px 25px;
 
-    border-bottom: 1px solid ${(props) => props.theme.dark.hover};
+    border-bottom: 1px solid ${(props) => props.theme.colors.border};
 `;
 
 const ModalUserWrapper = styled(MessageWrapper)`
@@ -23,10 +23,10 @@ const ModalInput = styled.textarea`
     width: 89%;
     margin: 0 25px;
     border-radius: 12px;
-    border: 1px solid ${(props) => props.theme.dark.hover};
+    border: 1px solid ${(props) => props.theme.colors.border};
     background-color: transparent;
     outline: none;
-    color: #fff;
+    color: ${(props) => props.theme.colors.font};
     padding: 5px;
     resize: none;
 `;
