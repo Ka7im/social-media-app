@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import Layout from '../components/Layout';
 import Message from '../components/Message';
 import { useAppSelector } from '../redux/redux-hook';
-import { getUserNameSelector } from '../redux/slices/authSlice/selectors';
+import {
+    getUserAvatarSelector,
+    getUserNameSelector,
+} from '../redux/slices/authSlice/selectors';
 
 export const ChatPageWrapper = styled.div`
     display: grid;
@@ -70,12 +73,13 @@ export const ClipButton = styled.button`
 
 const ChatPage = () => {
     const userName = useAppSelector(getUserNameSelector);
+    const userAvatar = useAppSelector(getUserAvatarSelector);
     const [value, setValue] = useState('');
     const [messages, setMessages] = useState<any[]>([]);
     const socket = useRef<WebSocket>();
 
     useEffect(() => {
-        socket.current = new WebSocket('ws://localhost:5001');
+        socket.current = new WebSocket('ws://localhost:5002');
 
         socket.current.onopen = () => {
             const message = {
@@ -105,6 +109,7 @@ const ChatPage = () => {
                 event: 'message',
                 message: value,
                 userName,
+                avatarUrl: userAvatar,
                 id: Date.now(),
             };
             socket.current?.send(JSON.stringify(message));
@@ -119,7 +124,7 @@ const ChatPage = () => {
                     {messages.map((message: any, i) => {
                         return (
                             <Message
-                                avatarUrl=''
+                                avatarUrl={message.avatarUrl}
                                 message={message.message}
                                 userName={message.userName}
                                 key={i}

@@ -9,6 +9,7 @@ import {
     getThemeSelector,
     isAuthSelector,
 } from './redux/slices/authSlice/selectors';
+import { IconContext } from 'react-icons';
 
 const Global = createGlobalStyle`
     *{
@@ -25,6 +26,12 @@ const Global = createGlobalStyle`
     body {
         background-color: ${(props) => props.theme.colors.bg}
     }
+
+    .react-icons {
+        width: 20px;
+        height: 20px;
+        color: #6f6f6f;
+    }
 `;
 
 const App = () => {
@@ -37,9 +44,11 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Global />
-            <Header />
-            <Outlet />
+            <IconContext.Provider value={{ className: 'react-icons' }}>
+                <Global />
+                <Header />
+                <Outlet />
+            </IconContext.Provider>
         </ThemeProvider>
     );
 };

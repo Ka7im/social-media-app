@@ -117,7 +117,7 @@ const AddPost = () => {
         try {
             const file = e.target.files?.item(0);
             const formData = new FormData();
-            formData.append('image', file as File);
+            formData.append('file', file as File);
             const { data } = await $authHost.post('/upload', formData);
             setImageUrl(data.url);
         } catch (error) {

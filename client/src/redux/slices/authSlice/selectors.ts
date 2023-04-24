@@ -1,4 +1,3 @@
-import { Root } from 'react-markdown/lib/rehype-filter';
 import { RootState } from '../../store';
 
 export const isAuthSelector = (state: RootState) => {
@@ -19,4 +18,8 @@ export const getUserIdSelector = (state: RootState) => {
 
 export const getThemeSelector = (state: RootState) => {
     return state.auth.theme;
+};
+
+export const getUserAvatarSelector = (state: RootState) => {
+    return state.auth.data?.avatarUrl;
 };

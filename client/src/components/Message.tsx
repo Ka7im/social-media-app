@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { BASE_URL } from '../utils/consts';
 
 export const MessageWrapper = styled.li`
     display: flex;
@@ -30,18 +31,23 @@ const Mess = styled.div`
 `;
 
 type MessageProps = {
-    message: string;
+    message?: string;
+    audioUrl?: string;
+    videoUrl?: string;
     userName: string;
     avatarUrl: string;
 };
 
-const Message = ({ message, userName, avatarUrl }: MessageProps) => {
+const Message = ({ message, userName, avatarUrl, audioUrl }: MessageProps) => {
     return (
         <MessageWrapper>
             <Avatar src={avatarUrl} />
             <InfoWrapper>
                 <UserName>{userName}</UserName>
-                <Mess>{message}</Mess>
+                {message && <Mess>{message}</Mess>}
+                {audioUrl && (
+                    <audio src={`${BASE_URL}${audioUrl}`} controls></audio>
+                )}
             </InfoWrapper>
         </MessageWrapper>
     );

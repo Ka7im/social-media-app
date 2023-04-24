@@ -21,6 +21,25 @@ const wss = new WebSocketServer(
     () => console.log(`Server started on 5001`)
 );
 
+const publicWss = new WebSocketServer(
+    {
+        port: 5002,
+    },
+    () => console.log(`Server started on 5002`)
+);
+
+publicWss.on('connection', function connnection(ws) {
+    ws.on('message', function (message) {
+        message = JSON.parse(message);
+
+        switch (message.event) {
+            case 'message':
+                broadcastMessage(message);
+                break;
+        }
+    });
+});
+
 function checkAuthWS(token) {
     if (!token) return;
 
@@ -44,6 +63,7 @@ wss.on('connection', function connnection(ws) {
                     break;
                 case 'private-message':
                     const newMessage = await MessageController.create({
+                        audioUrl: message.audioUrl,
                         message: message.message,
                         from: ws.id,
                         to: message.to,
@@ -51,9 +71,6 @@ wss.on('connection', function connnection(ws) {
                     });
 
                     privateMessage(newMessage, ws.id, message.to);
-                    break;
-                case 'message':
-                    broadcastMessage(message);
                     break;
             }
         } catch (error) {
@@ -64,7 +81,7 @@ wss.on('connection', function connnection(ws) {
 });
 
 function broadcastMessage(message) {
-    wss.clients.forEach((client) => {
+    publicWss.clients.forEach((client) => {
         client.send(JSON.stringify(message));
     });
 }
@@ -91,7 +108,8 @@ const storage = multer.diskStorage({
         cb(null, 'uploads');
     },
     filename: (req, file, cb) => {
-        cb(null, file.originalname);
+        const fileName = `${Date.now()}-${file.originalname}`;
+        cb(null, fileName);
     },
 });
 
@@ -101,9 +119,9 @@ app.use(express.json());
 app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
     res.json({
-        url: `/uploads/${req.file.originalname}`,
+        url: `/${req.file.path.replace(/\\/g, '/')}`,
     });
 });
 

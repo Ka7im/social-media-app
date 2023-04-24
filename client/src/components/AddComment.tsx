@@ -25,6 +25,7 @@ const AddCommentInput = styled.input`
 const AddCommentButton = styled.button`
     border-radius: 10px;
     border: 1px solid ${(props) => props.theme.colors.font};
+    color: ${(props) => props.theme.colors.font};
     background-color: transparent;
     padding: 5px 10px;
     cursor: pointer;

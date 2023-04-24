@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { IMessage } from '../../../types/Message';
 import { $authHost } from '../../../axios/axios';
 
@@ -40,4 +40,4 @@ const messageSlice = createSlice({
 });
 
 export const messagesReducer = messageSlice.reducer;
-export const {setMessages} = messageSlice.actions;
+export const { setMessages } = messageSlice.actions;

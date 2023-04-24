@@ -3,23 +3,20 @@ import styled from 'styled-components';
 import Layout from '../components/Layout';
 import Message from '../components/Message';
 import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
-import {
-    ChatPageWrapper,
-    ChatWrapper,
-    ChatInputWrapper,
-    ChatInput,
-    SendButton,
-} from './ChatPage';
+import { ChatPageWrapper, ChatWrapper } from './ChatPage';
 import Dialog from '../components/Dialog';
 import { IMessage } from '../types/Message';
 import { $authHost } from '../axios/axios';
-import { IUser } from '../types/User';
 import {
     getMessages,
     setMessages,
 } from '../redux/slices/messageSlice/messageSlice';
 import { getUserIdSelector } from '../redux/slices/authSlice/selectors';
 import { getMessagesSelector } from '../redux/slices/messageSlice/selectors';
+
+import { useDialogs } from '../utils/hooks/useDialogs';
+import Emoji from '../components/Emoji/Emoji';
+import ChatInput from '../components/ChatInput/ChatInput';
 
 const DialogSidebar = styled.div`
     display: flex;
@@ -43,8 +40,7 @@ const SelectChat = styled.div`
 
 const Messages = () => {
     const [isSelected, setIsSelected] = useState(false);
-    const [value, setValue] = useState('');
-    const [dialogs, setDialogs] = useState<IUser[]>([]);
+    const { dialogs, setDialogs } = useDialogs();
     const [to, setTo] = useState('');
     const socket = useRef<WebSocket>();
     const lastMessage = useRef<HTMLDivElement>();
@@ -79,27 +75,6 @@ const Messages = () => {
         };
     }, []);
 
-    useEffect(() => {
-        $authHost.get('/dialogs').then(({ data }) => {
-            setDialogs(data);
-        });
-    }, []);
-
-    const onSendPrivateMessage = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (value) {
-            const message = {
-                event: 'private-message',
-                message: value,
-                token: localStorage.getItem('token'),
-                to,
-            };
-            socket.current?.send(JSON.stringify(message));
-            setValue('');
-        }
-    };
-
     return (
         <Layout>
             <>
@@ -112,6 +87,7 @@ const Messages = () => {
                                 {messages.map((message, i) => {
                                     return (
                                         <Message
+                                            audioUrl={message.audioUrl}
                                             message={message.message}
                                             userName={message.from.fullName}
                                             avatarUrl={message.from.avatarUrl}
@@ -120,42 +96,7 @@ const Messages = () => {
                                     );
                                 })}
                             </ChatWrapper>
-                            <ChatInputWrapper onSubmit={onSendPrivateMessage}>
-                                <ChatInput
-                                    placeholder='Напишите сообщение...'
-                                    value={value}
-                                    onChange={(e) => setValue(e.target.value)}
-                                />
-                                <SendButton type='submit'>
-                                    <svg
-                                        width='30px'
-                                        height='30px'
-                                        viewBox='0 0 24 24'
-                                        fill='none'
-                                        xmlns='http://www.w3.org/2000/svg'
-                                    >
-                                        <g
-                                            id='SVGRepo_bgCarrier'
-                                            stroke-width='0'
-                                        ></g>
-                                        <g
-                                            id='SVGRepo_tracerCarrier'
-                                            stroke-linecap='round'
-                                            stroke-linejoin='round'
-                                        ></g>
-                                        <g id='SVGRepo_iconCarrier'>
-                                            {' '}
-                                            <path
-                                                d='M20 4L3 11L10 14M20 4L13 21L10 14M20 4L10 14'
-                                                stroke='#6f6f6f'
-                                                stroke-width='1.5'
-                                                stroke-linecap='round'
-                                                stroke-linejoin='round'
-                                            ></path>{' '}
-                                        </g>
-                                    </svg>
-                                </SendButton>
-                            </ChatInputWrapper>
+                            <ChatInput to={to} socket={socket} />
                         </>
                     )}
                 </ChatPageWrapper>

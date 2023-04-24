@@ -4,15 +4,22 @@ import UserModel from '../models/User.js';
 class MessageController {
     async create(data) {
         try {
-            const { message, imageUrl, from, to } = data;
+            const { message, imageUrl, from, to, audioUrl } = data;
 
-            const doc = new MessageModel({ message, imageUrl, from, to });
+            const doc = new MessageModel({
+                message,
+                imageUrl,
+                from,
+                to,
+                audioUrl,
+            });
 
             const newMessage = await (
                 await (await doc.save()).populate('from')
             ).populate('to');
 
             return {
+                audioUrl: newMessage.audioUrl,
                 message: newMessage.message,
                 to: {
                     _id: newMessage.to._id,

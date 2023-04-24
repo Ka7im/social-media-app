@@ -137,7 +137,7 @@ const Authorization = () => {
         try {
             const file = e.target.files?.item(0);
             const formData = new FormData();
-            formData.append('image', file as File);
+            formData.append('file', file as File);
 
             const { data } = await $host.post('/upload', formData);
 
