@@ -27,18 +27,40 @@ class PostController {
 
     async getAll(req, res) {
         try {
-            const { limit, page } = req.query;
+            const { limit, page, tag } = req.query;
 
             let offset = limit * page - limit;
             const count = await PostModel.countDocuments({});
 
-            const posts = await PostModel.find()
-                .populate('user')
-                .skip(offset)
-                .limit(limit)
-                .sort('-createdAt')
-                .exec();
-            res.json({ posts, count });
+            let posts;
+
+            if (!tag) {
+                posts = await PostModel.find()
+                    .populate('user')
+                    .skip(offset)
+                    .limit(limit)
+                    .sort('-createdAt')
+                    .exec();
+            } else {
+                posts = await PostModel.find({
+                    tags: { $in: tag },
+                })
+                    .populate('user')
+                    .skip(offset)
+                    .limit(limit)
+                    .sort('-createdAt')
+                    .exec();
+            }
+
+            let isNewPage;
+
+            if (page != 1) {
+                isNewPage = true;
+            } else {
+                isNewPage = false;
+            }
+
+            res.json({ posts, count, isNewPage });
         } catch (error) {
             console.log(error);
             res.status(500).json({

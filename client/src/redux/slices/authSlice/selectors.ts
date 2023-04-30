@@ -23,3 +23,7 @@ export const getThemeSelector = (state: RootState) => {
 export const getUserAvatarSelector = (state: RootState) => {
     return state.auth.data?.avatarUrl;
 };
+
+export const getTagFilterSelector = (state: RootState) => {
+    return state.auth.postFilter;
+};

@@ -17,6 +17,7 @@ class UserController {
                 fullName,
                 avatarUrl,
                 password: hash,
+                theme: 'light',
             });
 
             const user = await doc.save();
@@ -105,6 +106,24 @@ class UserController {
         const users = await UserModel.find({ fullName: { $regex: fullName } });
 
         res.send(users);
+    }
+
+    async toggleTheme(req, res) {
+        const { theme } = req.body;
+
+        const user = await UserModel.findByIdAndUpdate(
+            {
+                _id: req.userId,
+            },
+            {
+                theme,
+            },
+            {
+                returnDocument: 'after',
+            }
+        );
+
+        res.send(user.theme);
     }
 }
 

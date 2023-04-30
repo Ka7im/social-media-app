@@ -29,6 +29,7 @@ import { IComment } from '../types/Comment';
 import CommentsList from '../components/CommentsList';
 import { useAppSelector } from '../redux/redux-hook';
 import { getThemeSelector } from '../redux/slices/authSlice/selectors';
+import { ThemeEnums } from '../types/styled';
 
 const PostPageContainer = styled(Container)`
     width: 800px;
@@ -68,6 +69,7 @@ const PostPage = () => {
             _id: '',
             avatarUrl: '',
             email: '',
+            theme: ThemeEnums.light,
             fullName: '',
             createdAt: '',
             updatedAt: '',

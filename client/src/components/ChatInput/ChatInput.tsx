@@ -4,6 +4,8 @@ import { SendButton } from '../../pages/ChatPage';
 import styled from 'styled-components';
 import AudioInput from '../AudioInput/AudioInput';
 import { $host } from '../../axios/axios';
+import { uploadFile } from '../../utils/api/uploadFile';
+import VideoInput from '../VideoInput/VideoInput';
 
 type ChatInputProps = {
     to: string;
@@ -49,19 +51,25 @@ const Input = styled.input<IInput>`
     color: ${(props) => props.theme.colors.font};
 `;
 
-interface IAudioControl {
+interface IControl {
     isVisible: boolean;
 }
 
-const AudioControl = styled.audio<IAudioControl>`
+const AudioControl = styled.audio<IControl>`
+    display: ${(props) => (!props.isVisible ? 'none' : 'block')};
+`;
+
+const VideoControl = styled.video<IControl>`
     display: ${(props) => (!props.isVisible ? 'none' : 'block')};
 `;
 
 const ChatInput = ({ to, socket }: ChatInputProps) => {
     const [value, setValue] = useState('');
     const [media, setMedia] = useState<Blob | null>(null);
-    const [isStopped, setIsStopped] = useState(false);
+    const [isAudioStopped, setIsAudioStopped] = useState(false);
+    const [isVideoStopped, setIsVideoStopped] = useState(false);
     const audioRef = useRef<HTMLAudioElement>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const onSendPrivateMessage = async (
         e: React.FormEvent<HTMLFormElement>
@@ -78,20 +86,31 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
             socket.current?.send(JSON.stringify(message));
             setValue('');
         } else if (media) {
-            const formData = new FormData();
-            formData.append('file', media);
+            const data = await uploadFile(media);
 
-            const { data } = await $host.post('/upload', formData);
+            let message;
 
-            const message = {
-                event: 'private-message',
-                audioUrl: data.url,
-                token: localStorage.getItem('token'),
-                to,
-            };
+            if (media.type.match('/audio/i')) {
+                message = {
+                    event: 'private-message',
+                    audioUrl: data.url,
+                    token: localStorage.getItem('token'),
+                    to,
+                };
+            } else {
+                message = {
+                    event: 'private-message',
+                    videoUrl: data.url,
+                    token: localStorage.getItem('token'),
+                    to,
+                };
+            }
+
             socket.current?.send(JSON.stringify(message));
+
             setMedia(null);
-            setIsStopped(false);
+            setIsAudioStopped(false);
+            setIsVideoStopped(false);
         }
     };
 
@@ -99,17 +118,31 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
         <ChatInputWrapper>
             <ChatForm onSubmit={onSendPrivateMessage}>
                 <Input
-                    isVisible={!isStopped}
+                    isVisible={!isAudioStopped || !isVideoStopped}
                     placeholder='Напишите сообщение...'
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />
-                <AudioControl ref={audioRef} isVisible={isStopped} controls />
+                <AudioControl
+                    ref={audioRef}
+                    isVisible={isAudioStopped}
+                    controls
+                />
+                <VideoControl
+                    ref={videoRef}
+                    isVisible={isVideoStopped}
+                    controls
+                ></VideoControl>
                 <Emoji setValue={setValue} />
                 <AudioInput
-                    setIsStopped={setIsStopped}
+                    setIsStopped={setIsAudioStopped}
                     setMedia={setMedia}
                     audioRef={audioRef}
+                />
+                <VideoInput
+                    setIsStopped={setIsVideoStopped}
+                    setMedia={setMedia}
+                    videoRef={videoRef}
                 />
                 <SendButton type='submit'>
                     <svg

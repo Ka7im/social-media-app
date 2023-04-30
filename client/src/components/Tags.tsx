@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useAppDispatch } from '../redux/redux-hook';
+import { setFilterTag } from '../redux/slices/authSlice/authSlice';
+import { setFirstPage } from '../redux/slices/postsSlice/postsSlice';
 
 export const TagsWrapper = styled.div`
     display: flex;
@@ -38,11 +41,30 @@ type TagsProps = {
 };
 
 const Tags = ({ tags }: TagsProps) => {
+    const dispatch = useAppDispatch();
+
     return (
         <TagsWrapper>
             <TagsTitle>Теги</TagsTitle>
+            <Tag
+                key={0}
+                onClick={() => {
+                    dispatch(setFirstPage());
+                    dispatch(setFilterTag(''));
+                }}
+            >
+                Показать все
+            </Tag>
             {tags.map((tag, i) => (
-                <Tag key={i}># {tag}</Tag>
+                <Tag
+                    key={i}
+                    onClick={() => {
+                        dispatch(setFirstPage());
+                        dispatch(setFilterTag(tag));
+                    }}
+                >
+                    # {tag}
+                </Tag>
             ))}
         </TagsWrapper>
     );

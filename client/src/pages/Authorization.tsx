@@ -5,8 +5,12 @@ import styled from 'styled-components';
 import { $host } from '../axios/axios';
 import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
 import { fetchAuth, fetchRegister } from '../redux/slices/authSlice/authSlice';
-import { isAuthSelector } from '../redux/slices/authSlice/selectors';
+import {
+    getThemeSelector,
+    isAuthSelector,
+} from '../redux/slices/authSlice/selectors';
 import { BASE_URL } from '../utils/consts';
+import { uploadFile } from '../utils/api/uploadFile';
 
 const AuthWrapper = styled.form`
     display: flex;
@@ -88,7 +92,7 @@ const AuthButton = styled.button`
     }
 `;
 
-const Error = styled.div`
+const ErrorWarn = styled.div`
     color: red;
     font-size: 12px;
     font-weight: 500;
@@ -136,12 +140,12 @@ const Authorization = () => {
     const onSelectImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
             const file = e.target.files?.item(0);
-            const formData = new FormData();
-            formData.append('file', file as File);
-
-            const { data } = await $host.post('/upload', formData);
-
-            setAvatarUrl(data.url);
+            if (file) {
+                const data = await uploadFile(file);
+                setAvatarUrl(data.url);
+            } else {
+                throw new Error('Файл не выбран');
+            }
         } catch (error) {
             console.warn(error);
         }
@@ -190,14 +194,16 @@ const Authorization = () => {
                     type={'email'}
                     isError={!!errors.email}
                 />
-                {errors.email && <Error>{errors.email?.message}</Error>}
+                {errors.email && <ErrorWarn>{errors.email?.message}</ErrorWarn>}
                 <AuthInput
                     placeholder='Пароль'
                     {...register('password', { required: 'Укажите пароль' })}
                     type={'password'}
                     isError={!!errors.password}
                 />
-                {errors.password && <Error>{errors.password?.message}</Error>}
+                {errors.password && (
+                    <ErrorWarn>{errors.password?.message}</ErrorWarn>
+                )}
                 <AuthButton disabled={!isValid} type='submit'>
                     Войти
                 </AuthButton>
@@ -231,21 +237,25 @@ const Authorization = () => {
                 {...register('fullName', { required: 'Укажите полное имя' })}
                 isError={!!errors.fullName}
             />
-            {errors.fullName && <Error>{errors.fullName?.message}</Error>}
+            {errors.fullName && (
+                <ErrorWarn>{errors.fullName?.message}</ErrorWarn>
+            )}
             <AuthInput
                 placeholder='Email'
                 {...register('email', { required: 'Укажите пароль' })}
                 type={'email'}
                 isError={!!errors.email}
             />
-            {errors.email && <Error>{errors.email?.message}</Error>}
+            {errors.email && <ErrorWarn>{errors.email?.message}</ErrorWarn>}
             <AuthInput
                 placeholder='Пароль'
                 {...register('password', { required: 'Укажите пароль' })}
                 type={'password'}
                 isError={!!errors.password}
             />
-            {errors.password && <Error>{errors.password?.message}</Error>}
+            {errors.password && (
+                <ErrorWarn>{errors.password?.message}</ErrorWarn>
+            )}
             <AuthButton disabled={!isValid} type='submit'>
                 Зарегистрироваться
             </AuthButton>

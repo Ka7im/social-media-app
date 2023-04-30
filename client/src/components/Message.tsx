@@ -38,7 +38,17 @@ type MessageProps = {
     avatarUrl: string;
 };
 
-const Message = ({ message, userName, avatarUrl, audioUrl }: MessageProps) => {
+const VideoControl = styled.video`
+    width: 80%;
+`;
+
+const Message = ({
+    message,
+    userName,
+    avatarUrl,
+    audioUrl,
+    videoUrl,
+}: MessageProps) => {
     return (
         <MessageWrapper>
             <Avatar src={avatarUrl} />
@@ -47,6 +57,12 @@ const Message = ({ message, userName, avatarUrl, audioUrl }: MessageProps) => {
                 {message && <Mess>{message}</Mess>}
                 {audioUrl && (
                     <audio src={`${BASE_URL}${audioUrl}`} controls></audio>
+                )}
+                {videoUrl && (
+                    <VideoControl
+                        src={`${BASE_URL}${videoUrl}`}
+                        controls
+                    ></VideoControl>
                 )}
             </InfoWrapper>
         </MessageWrapper>

@@ -38,6 +38,25 @@ class CommentController {
             console.log(error);
         }
     }
+
+    async getUserComments(req, res) {
+        try {
+            const { id } = req.params;
+
+            const userComments = await CommentModel.find({
+                user: { _id: id },
+            })
+                .populate('user')
+                .populate('post');
+
+            res.send(userComments);
+        } catch (error) {
+            res.staus(500).json({
+                message: 'Не удалось получить комментарии пользователя',
+            });
+            console.log(error);
+        }
+    }
 }
 
 export default new CommentController();

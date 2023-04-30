@@ -37,6 +37,7 @@ const Global = createGlobalStyle`
 const App = () => {
     const theme = useAppSelector(getThemeSelector);
     const dispatch = useAppDispatch();
+    console.log(theme);
 
     useEffect(() => {
         dispatch(checkAuth());

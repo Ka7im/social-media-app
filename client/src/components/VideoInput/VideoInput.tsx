@@ -1,22 +1,20 @@
 import { useState } from 'react';
-import { IconContext } from 'react-icons';
-import { BsRecordCircle } from 'react-icons/bs';
-
 import MediaInput from '../MediaInput/MediaInput';
+import { BsCameraVideoFill } from 'react-icons/bs';
 
-type AudioInputProps = {
+type VideoInputProps = {
     setIsStopped: React.Dispatch<React.SetStateAction<boolean>>;
     setMedia: React.Dispatch<React.SetStateAction<Blob | null>>;
-    audioRef: React.RefObject<HTMLAudioElement>;
+    videoRef: React.RefObject<HTMLVideoElement>;
 };
 
-const AudioInput = ({ setIsStopped, setMedia, audioRef }: AudioInputProps) => {
+const VideoInput = ({ setIsStopped, setMedia, videoRef }: VideoInputProps) => {
     const [isRecording, setIsRecording] = useState<boolean>(false);
     const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
 
     const handleStartRecording = (): void => {
         navigator.mediaDevices
-            .getUserMedia({ audio: true })
+            .getUserMedia({ video: true })
             .then((stream) => {
                 setIsRecording(true);
 
@@ -29,8 +27,9 @@ const AudioInput = ({ setIsStopped, setMedia, audioRef }: AudioInputProps) => {
 
                         const url = URL.createObjectURL(event.data);
 
-                        if (audioRef.current) {
-                            audioRef.current.src = url;
+                        if (videoRef.current) {
+                            videoRef.current.src = url;
+                            console.log(videoRef.current.src);
                             setIsStopped(true);
                         }
                     }
@@ -53,7 +52,7 @@ const AudioInput = ({ setIsStopped, setMedia, audioRef }: AudioInputProps) => {
 
     return (
         <MediaInput
-            Icon={BsRecordCircle}
+            Icon={BsCameraVideoFill}
             handleStartRecording={handleStartRecording}
             handleStopRecording={handleStopRecording}
             isRecording={isRecording}
@@ -61,4 +60,4 @@ const AudioInput = ({ setIsStopped, setMedia, audioRef }: AudioInputProps) => {
     );
 };
 
-export default AudioInput;
+export default VideoInput;

@@ -63,6 +63,7 @@ wss.on('connection', function connnection(ws) {
                     break;
                 case 'private-message':
                     const newMessage = await MessageController.create({
+                        videoUrl: message.videoUrl,
                         audioUrl: message.audioUrl,
                         message: message.message,
                         from: ws.id,
@@ -125,6 +126,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
     });
 });
 
+app.post('/theme', checkAuth, UserController.toggleTheme);
+
 app.get('/search', UserController.getUser);
 
 app.get('/message', checkAuth, MessageController.getAll);
@@ -134,6 +137,8 @@ app.get('/dialogs', checkAuth, MessageController.getDialogs);
 app.post('/message', checkAuth, MessageController.newMessage);
 
 app.get('/comments', checkAuth, CommentController.getCommentById);
+
+app.get('/comments/:id', checkAuth, CommentController.getUserComments);
 
 app.post('/comments', checkAuth, CommentController.create);
 

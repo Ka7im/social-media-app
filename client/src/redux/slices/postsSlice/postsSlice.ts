@@ -44,18 +44,21 @@ export const fetchPosts = createAsyncThunk(
     async ({
         page = 1,
         limit = 5,
+        tagFilter = '',
     }: {
         page?: IPostsSlice['posts']['page'];
         limit?: IPostsSlice['posts']['limit'];
+        tagFilter?: string;
     }) => {
         const { data } = await $host.get('/posts', {
             params: {
                 page,
                 limit,
+                tag: tagFilter,
             },
         });
 
-        return data as { posts: IPost[]; count: number };
+        return data as { posts: IPost[]; count: number; isNewPage: boolean };
     }
 );
 
@@ -84,6 +87,9 @@ const postsSlice = createSlice({
         increasePage: (state) => {
             state.posts.page++;
         },
+        setFirstPage: (state) => {
+            state.posts.page = 1;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -97,25 +103,29 @@ const postsSlice = createSlice({
             .addCase(fetchPosts.fulfilled, (state, action) => {
                 const newPosts = [];
 
-                for (let i = 0; i < action.payload.posts.length; i++) {
-                    let isEqual = false;
-                    for (let j = 0; j < state.posts.items.length; j++) {
-                        if (
-                            state.posts.items[j]._id ===
-                            action.payload.posts[i]._id
-                        ) {
-                            isEqual = true;
-                            break;
+                if (action.payload.isNewPage) {
+                    for (let i = 0; i < action.payload.posts.length; i++) {
+                        let isEqual = false;
+                        for (let j = 0; j < state.posts.items.length; j++) {
+                            if (
+                                state.posts.items[j]._id ===
+                                action.payload.posts[i]._id
+                            ) {
+                                isEqual = true;
+                                break;
+                            }
+                        }
+
+                        if (!isEqual) {
+                            newPosts.push(action.payload.posts[i]);
                         }
                     }
 
-                    if (!isEqual) {
-                        newPosts.push(action.payload.posts[i]);
+                    for (let i = newPosts.length - 1; i >= 0; i--) {
+                        state.posts.items.unshift(newPosts[i]);
                     }
-                }
-
-                for (let i = newPosts.length - 1; i >= 0; i--) {
-                    state.posts.items.unshift(newPosts[i]);
+                } else {
+                    state.posts.items = action.payload.posts;
                 }
 
                 state.posts.items.sort((a, b) => {
@@ -154,4 +164,4 @@ const postsSlice = createSlice({
 });
 
 export const postsReducer = postsSlice.reducer;
-export const { increasePage } = postsSlice.actions;
+export const { increasePage, setFirstPage } = postsSlice.actions;

@@ -10,6 +10,7 @@ import Tags, { TagsTitle, TagsWrapper } from '../components/Tags';
 import TagSkeleton from '../components/TagSkeleton';
 import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
 import {
+    getTagFilterSelector,
     getUserDataSelector,
     isAuthSelector,
 } from '../redux/slices/authSlice/selectors';
@@ -86,6 +87,7 @@ const Posts = () => {
     const page = useAppSelector(getPostPageSelector);
     const count = useAppSelector(getPostCountSelector);
     const limit = useAppSelector(getPostLimitSelector);
+    const tagFilter = useAppSelector(getTagFilterSelector);
     const dispatch = useAppDispatch();
 
     const observable = useRef(null);
@@ -99,8 +101,8 @@ const Posts = () => {
     useScroll(observable, onIntersect);
 
     useEffect(() => {
-        dispatch(fetchPosts({ page }));
-    }, [page]);
+        dispatch(fetchPosts({ page, tagFilter }));
+    }, [page, tagFilter]);
 
     useEffect(() => {
         dispatch(fetchTags());

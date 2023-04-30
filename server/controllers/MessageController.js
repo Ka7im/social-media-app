@@ -4,7 +4,7 @@ import UserModel from '../models/User.js';
 class MessageController {
     async create(data) {
         try {
-            const { message, imageUrl, from, to, audioUrl } = data;
+            const { message, imageUrl, from, to, audioUrl, videoUrl } = data;
 
             const doc = new MessageModel({
                 message,
@@ -12,6 +12,7 @@ class MessageController {
                 from,
                 to,
                 audioUrl,
+                videoUrl,
             });
 
             const newMessage = await (
@@ -19,6 +20,7 @@ class MessageController {
             ).populate('to');
 
             return {
+                videoUrl: newMessage.videoUrl,
                 audioUrl: newMessage.audioUrl,
                 message: newMessage.message,
                 to: {

@@ -20,6 +20,7 @@ import { BASE_URL } from '../utils/consts';
 import Spinner from '../components/Spinner';
 import { IPost } from '../types/Post';
 import { fetchPosts } from '../redux/slices/postsSlice/postsSlice';
+import { uploadFile } from '../utils/api/uploadFile';
 
 const AddPostContainer = styled(Container)`
     width: 800px;
@@ -116,10 +117,12 @@ const AddPost = () => {
     const handleChangeFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
             const file = e.target.files?.item(0);
-            const formData = new FormData();
-            formData.append('file', file as File);
-            const { data } = await $authHost.post('/upload', formData);
-            setImageUrl(data.url);
+            if (file) {
+                const data = await uploadFile(file);
+                setImageUrl(data.url);
+            } else {
+                throw new Error('Файл не выбран');
+            }
         } catch (error) {
             console.warn(error);
         }

@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Layout from '../components/Layout';
-import Message from '../components/Message';
 import { useAppDispatch, useAppSelector } from '../redux/redux-hook';
-import { ChatPageWrapper, ChatWrapper } from './ChatPage';
+import { ChatPageWrapper } from './ChatPage';
 import Dialog from '../components/Dialog';
 import { IMessage } from '../types/Message';
 import { $authHost } from '../axios/axios';
@@ -12,11 +11,10 @@ import {
     setMessages,
 } from '../redux/slices/messageSlice/messageSlice';
 import { getUserIdSelector } from '../redux/slices/authSlice/selectors';
-import { getMessagesSelector } from '../redux/slices/messageSlice/selectors';
 
 import { useDialogs } from '../utils/hooks/useDialogs';
-import Emoji from '../components/Emoji/Emoji';
 import ChatInput from '../components/ChatInput/ChatInput';
+import MessageList from '../components/MessageList/MessageList';
 
 const DialogSidebar = styled.div`
     display: flex;
@@ -46,7 +44,6 @@ const Messages = () => {
     const lastMessage = useRef<HTMLDivElement>();
     const dispatch = useAppDispatch();
     const userId = useAppSelector(getUserIdSelector);
-    const messages = useAppSelector(getMessagesSelector);
 
     useEffect(() => {
         socket.current = new WebSocket('ws://localhost:5001');
@@ -67,9 +64,11 @@ const Messages = () => {
 
             dispatch(setMessages(message));
         };
+
         socket.current.onclose = () => {
             console.log('Socket закрыт');
         };
+
         socket.current.onerror = () => {
             console.log('Socket произошла ошибка');
         };
@@ -83,19 +82,7 @@ const Messages = () => {
                         <SelectChat>Выберите диалог</SelectChat>
                     ) : (
                         <>
-                            <ChatWrapper>
-                                {messages.map((message, i) => {
-                                    return (
-                                        <Message
-                                            audioUrl={message.audioUrl}
-                                            message={message.message}
-                                            userName={message.from.fullName}
-                                            avatarUrl={message.from.avatarUrl}
-                                            key={i}
-                                        />
-                                    );
-                                })}
-                            </ChatWrapper>
+                            <MessageList />
                             <ChatInput to={to} socket={socket} />
                         </>
                     )}

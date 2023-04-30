@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
             required: true,
         },
         avatarUrl: String,
+        theme: String,
     },
     {
         timestamps: true,

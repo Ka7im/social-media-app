@@ -10,12 +10,14 @@ interface IAuthSlice {
     data: IUser | null;
     status: Status;
     theme: DefaultTheme;
+    postFilter: string;
 }
 
 const initialState: IAuthSlice = {
     data: null,
     status: Status.Loading,
     theme: lightTheme,
+    postFilter: '',
 };
 
 export const fetchAuth = createAsyncThunk(
@@ -27,13 +29,13 @@ export const fetchAuth = createAsyncThunk(
 
         const { token, ...payload } = data;
 
-        return payload;
+        return payload as IUser;
     }
 );
 
 export const checkAuth = createAsyncThunk('auth/checkAuth', async () => {
     const { data } = await $authHost.get('/auth/me');
-    return data;
+    return data as IUser;
 });
 
 export const fetchRegister = createAsyncThunk(
@@ -50,7 +52,16 @@ export const fetchRegister = createAsyncThunk(
 
         const { token, ...payload } = data;
 
-        return payload;
+        return payload as IUser;
+    }
+);
+
+export const toggleTheme = createAsyncThunk(
+    'auth/toggleTheme',
+    async (theme: ThemeEnums) => {
+        const { data } = await $authHost.post('/theme', { theme });
+
+        return data as ThemeEnums;
     }
 );
 
@@ -58,24 +69,32 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        toggleTheme: (state) => {
-            state.theme.type === ThemeEnums.light
-                ? (state.theme = darkTheme)
-                : (state.theme = lightTheme);
-        },
         logout: (state) => {
             state.data = null;
             localStorage.removeItem('token');
         },
+        setFilterTag: (state, action) => {
+            state.postFilter = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
+            .addCase(toggleTheme.fulfilled, (state, action) => {
+                state.theme =
+                    action.payload === ThemeEnums.light
+                        ? lightTheme
+                        : darkTheme;
+            })
             .addCase(fetchAuth.pending, (state) => {
                 state.status = Status.Loading;
                 state.data = null;
             })
             .addCase(fetchAuth.fulfilled, (state, action) => {
                 state.data = action.payload;
+                state.theme =
+                    action.payload.theme === ThemeEnums.light
+                        ? lightTheme
+                        : darkTheme;
                 state.status = Status.Success;
             })
             .addCase(fetchAuth.rejected, (state) => {
@@ -88,6 +107,10 @@ const authSlice = createSlice({
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
                 state.data = action.payload;
+                state.theme =
+                    action.payload.theme === ThemeEnums.light
+                        ? lightTheme
+                        : darkTheme;
                 state.status = Status.Success;
             })
             .addCase(checkAuth.rejected, (state) => {
@@ -100,6 +123,10 @@ const authSlice = createSlice({
             })
             .addCase(fetchRegister.fulfilled, (state, action) => {
                 state.data = action.payload;
+                state.theme =
+                    action.payload.theme === ThemeEnums.light
+                        ? lightTheme
+                        : darkTheme;
                 state.status = Status.Success;
             })
             .addCase(fetchRegister.rejected, (state) => {
@@ -111,4 +138,4 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { logout, toggleTheme } = authSlice.actions;
+export const { logout, setFilterTag } = authSlice.actions;
