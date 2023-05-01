@@ -110,7 +110,10 @@ const PostPage = () => {
                     />
                 )}
                 <PostUserInfo>
-                    <Avatar src={post.user.avatarUrl} loading='lazy' />
+                    <Avatar
+                        src={`${BASE_URL}${post.user.avatarUrl}`}
+                        loading='lazy'
+                    />
                     <AvatarInfo>
                         <UserName>{post.user.fullName}</UserName>
                         <PostDate>{date.toDateString()}</PostDate>

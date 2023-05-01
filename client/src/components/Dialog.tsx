@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IUser } from '../types/User';
+import { BASE_URL } from '../utils/consts';
 
 const DialogWrapper = styled.div`
     display: flex;
@@ -39,7 +40,7 @@ export const DialogInfo = styled.div`
 export const DialogUserName = styled.div`
     color: ${(props) => props.theme.mainColor};
     font-weight: 700;
-    font-size: 14px; ;
+    font-size: 14px;
 `;
 
 type DialogProps = {
@@ -50,7 +51,7 @@ type DialogProps = {
 const Dialog = ({ onClick, userData }: DialogProps) => {
     return (
         <DialogWrapper onClick={onClick}>
-            <DialogAvatar src={userData.avatarUrl} />
+            <DialogAvatar src={`${BASE_URL}${userData.avatarUrl}`} />
             <DialogInfo>
                 <DialogUserName>{userData.fullName}</DialogUserName>
             </DialogInfo>

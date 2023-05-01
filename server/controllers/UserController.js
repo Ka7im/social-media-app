@@ -125,6 +125,32 @@ class UserController {
 
         res.send(user.theme);
     }
+
+    async updateUserInfo(req, res) {
+        try {
+            const { id, birthday, city, education, familyStatus, avatarUrl } = req.body;
+
+            const user = await UserModel.findByIdAndUpdate(
+                id,
+                {
+                    avatarUrl,
+                    birthday,
+                    city,
+                    education,
+                    familyStatus,
+                },
+                { new: true }
+            );
+
+            const { password, ...updatedUser } = user._doc;
+
+            res.send(updatedUser);
+        } catch (error) {
+            res.status(500).json({
+                message: 'Не получилось обновить данные пользователя',
+            });
+        }
+    }
 }
 
 export default new UserController();

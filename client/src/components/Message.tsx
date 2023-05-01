@@ -12,6 +12,7 @@ const Avatar = styled.img`
     border-radius: 50%;
     width: 36px;
     height: 36px;
+    object-fit: cover;
 `;
 
 const InfoWrapper = styled.div`
@@ -51,7 +52,7 @@ const Message = ({
 }: MessageProps) => {
     return (
         <MessageWrapper>
-            <Avatar src={avatarUrl} />
+            <Avatar src={`${BASE_URL}${avatarUrl}`} />
             <InfoWrapper>
                 <UserName>{userName}</UserName>
                 {message && <Mess>{message}</Mess>}

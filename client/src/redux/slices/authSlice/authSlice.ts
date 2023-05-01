@@ -20,6 +20,22 @@ const initialState: IAuthSlice = {
     postFilter: '',
 };
 
+export const updateUserInfo = createAsyncThunk(
+    'auth/updateUserInfo',
+    async (payload: {
+        id: string | undefined;
+        birthday: string;
+        city: string;
+        education: string;
+        familyStatus: string;
+        avatarUrl: string;
+    }) => {
+        const { data } = await $authHost.patch('/auth', payload);
+
+        return data as IUser;
+    }
+);
+
 export const fetchAuth = createAsyncThunk(
     'auth/fetchUserData',
     async ({ email, password }: { email: string; password: string }) => {
@@ -132,6 +148,9 @@ const authSlice = createSlice({
             .addCase(fetchRegister.rejected, (state) => {
                 state.status = Status.Error;
                 state.data = null;
+            })
+            .addCase(updateUserInfo.fulfilled, (state, action) => {
+                state.data = action.payload;
             });
     },
 });

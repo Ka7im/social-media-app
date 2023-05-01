@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { UserName } from './Post';
 import { IUser } from '../types/User';
+import { BASE_URL } from '../utils/consts';
 
 const CommentWrapper = styled.div`
     background-color: ${(props) => props.theme.colors.componentBg};
@@ -17,6 +18,7 @@ const Avatar = styled.img`
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    object-fit: cover;
 `;
 
 const UserWrapper = styled.div`
@@ -40,7 +42,7 @@ const Comment = ({ user: { avatarUrl, fullName }, comment }: CommentProps) => {
     return (
         <CommentWrapper>
             <UserWrapper>
-                <Avatar src={avatarUrl} />
+                <Avatar src={`${BASE_URL}${avatarUrl}`} />
                 <UserName>{fullName}</UserName>
             </UserWrapper>
             <CommentText>{comment}</CommentText>

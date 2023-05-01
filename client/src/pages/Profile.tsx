@@ -8,6 +8,9 @@ import CommentsListWithLink from '../components/CommentsListWithLink';
 import { AiOutlineEdit, AiFillHome, AiOutlineHeart } from 'react-icons/ai';
 import { FaBirthdayCake } from 'react-icons/fa';
 import { BsBriefcaseFill } from 'react-icons/bs';
+import UserInfoEditModal from '../components/UserInfoEditModal';
+import { useState } from 'react';
+import { BASE_URL } from '../utils/consts';
 
 const ProfileWrapper = styled.div`
     display: flex;
@@ -28,6 +31,7 @@ const ProfileAvatar = styled.img`
     width: 150px;
     height: 150px;
     border-radius: 50%;
+    object-fit: cover;
 `;
 
 const UserName = styled.div`
@@ -99,52 +103,74 @@ const CommentTitle = styled.div`
 
 const Profile = () => {
     const user = useAppSelector(getUserDataSelector);
-
+    const [isActive, setIsActive] = useState(false);
     const { id } = useParams();
 
-    const comments = useUserComments(id as string);
+    const comments = useUserComments(id as string, user?.avatarUrl as string);
 
     return (
         <Layout>
             <>
                 <ProfileWrapper>
                     <UserInfo>
-                        <ProfileAvatar src={user?.avatarUrl} />
-                        <Information>
+                        <ProfileAvatar src={`${BASE_URL}${user?.avatarUrl}`} />
+                        <Information onClick={() => setIsActive(true)}>
                             <UserName>{user?.fullName}</UserName>
                             <More>
                                 <AiOutlineEdit />
                                 <Title>Изменить</Title>
                             </More>
                         </Information>
+                        <UserInfoEditModal
+                            isActive={isActive}
+                            setIsActive={setIsActive}
+                        />
                     </UserInfo>
                     <InfoWrapper>
                         <Description>
                             <FaBirthdayCake />
                             <DescriptionTitle>
                                 День рождения:
-                                <DescriptionText> 4 октября</DescriptionText>
+                                <DescriptionText>
+                                    {' '}
+                                    {user?.birthday
+                                        ? user?.birthday
+                                        : 'Не указана'}
+                                </DescriptionText>
                             </DescriptionTitle>
                         </Description>
                         <Description>
                             <AiFillHome />
                             <DescriptionTitle>
                                 Город:
-                                <DescriptionText> Казань</DescriptionText>
+                                <DescriptionText>
+                                    {' '}
+                                    {user?.city ? user?.city : 'Не указан'}
+                                </DescriptionText>
                             </DescriptionTitle>
                         </Description>
                         <Description>
                             <BsBriefcaseFill />
                             <DescriptionTitle>
                                 Образование:
-                                <DescriptionText> КФУ</DescriptionText>
+                                <DescriptionText>
+                                    {' '}
+                                    {user?.education
+                                        ? user?.education
+                                        : 'Не указано'}
+                                </DescriptionText>
                             </DescriptionTitle>
                         </Description>
                         <Description>
                             <AiOutlineHeart />
                             <DescriptionTitle>
                                 Семейное положение:
-                                <DescriptionText> GG</DescriptionText>
+                                <DescriptionText>
+                                    {' '}
+                                    {user?.familyStatus
+                                        ? user?.familyStatus
+                                        : 'Не указано'}
+                                </DescriptionText>
                             </DescriptionTitle>
                         </Description>
                     </InfoWrapper>

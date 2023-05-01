@@ -61,6 +61,7 @@ const AudioControl = styled.audio<IControl>`
 
 const VideoControl = styled.video<IControl>`
     display: ${(props) => (!props.isVisible ? 'none' : 'block')};
+    width: 100px;
 `;
 
 const ChatInput = ({ to, socket }: ChatInputProps) => {
@@ -90,7 +91,7 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
 
             let message;
 
-            if (media.type.match('/audio/i')) {
+            if (media.type.match('audio')?.[0]) {
                 message = {
                     event: 'private-message',
                     audioUrl: data.url,
@@ -105,7 +106,7 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
                     to,
                 };
             }
-
+            console.log(message);
             socket.current?.send(JSON.stringify(message));
 
             setMedia(null);
@@ -118,7 +119,7 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
         <ChatInputWrapper>
             <ChatForm onSubmit={onSendPrivateMessage}>
                 <Input
-                    isVisible={!isAudioStopped || !isVideoStopped}
+                    isVisible={!isAudioStopped}
                     placeholder='Напишите сообщение...'
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
@@ -128,11 +129,11 @@ const ChatInput = ({ to, socket }: ChatInputProps) => {
                     isVisible={isAudioStopped}
                     controls
                 />
-                <VideoControl
+                {/* <VideoControl
                     ref={videoRef}
                     isVisible={isVideoStopped}
                     controls
-                ></VideoControl>
+                ></VideoControl> */}
                 <Emoji setValue={setValue} />
                 <AudioInput
                     setIsStopped={setIsAudioStopped}

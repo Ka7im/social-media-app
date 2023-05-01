@@ -113,9 +113,7 @@ const isString = (param: any): param is string => {
 };
 
 const Authorization = () => {
-    const [avatarUrl, setAvatarUrl] = useState(
-        `${BASE_URL}/uploads/camera_50.png`
-    );
+    const [avatarUrl, setAvatarUrl] = useState(`/uploads/camera_50.png`);
     const [isAfterSubmit, setIsAfterSubmit] = useState(false);
     const isAuth = useAppSelector(isAuthSelector);
     const dispatch = useAppDispatch();
@@ -223,7 +221,7 @@ const Authorization = () => {
             />
             <AuthAvatar
                 src={
-                    (avatarUrl && `${avatarUrl}`) ||
+                    (avatarUrl && `${BASE_URL}${avatarUrl}`) ||
                     `${BASE_URL}/uploads/camera_50.png`
                 }
                 onClick={() => {

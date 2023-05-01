@@ -1,6 +1,6 @@
 import { $host } from '../../axios/axios';
 
-export async function uploadFile(file: Blob | string) {
+export async function uploadFile(file: Blob) {
     const formData = new FormData();
     formData.append('file', file);
 

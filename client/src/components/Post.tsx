@@ -57,6 +57,7 @@ export const Avatar = styled.img`
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    object-fit: cover;
 `;
 
 export const AvatarInfo = styled.div`
@@ -200,7 +201,7 @@ export const Post = ({
                 )}
 
                 <PostUserInfo>
-                    <Avatar src={avatarUrl} />
+                    <Avatar src={`${BASE_URL}${avatarUrl}`} />
                     <AvatarInfo>
                         <UserName>{fullName}</UserName>
                         <PostDate>{date.toDateString()}</PostDate>
