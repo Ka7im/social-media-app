@@ -1,186 +1,193 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import multer from 'multer';
-import { registerValidator, loginValidation } from './validations/auth.js';
-import { checkAuth, handleValidationErrors } from './middleware/index.js';
+import express from "express";
+import mongoose from "mongoose";
+import multer from "multer";
+import { registerValidator, loginValidation } from "./validations/auth.js";
+import { checkAuth, handleValidationErrors } from "./middleware/index.js";
 import {
-    UserController,
-    PostController,
-    MessageController,
-    CommentController,
-} from './controllers/index.js';
-import { postCreateValidation } from './validations/post.js';
-import cors from 'cors';
-import { WebSocketServer } from 'ws';
-import jwt from 'jsonwebtoken';
+  UserController,
+  PostController,
+  MessageController,
+  CommentController,
+} from "./controllers/index.js";
+import { postCreateValidation } from "./validations/post.js";
+import cors from "cors";
+import { WebSocketServer } from "ws";
+import jwt from "jsonwebtoken";
+import User from "./models/User.js";
 
 const wss = new WebSocketServer(
-    {
-        port: 5001,
-    },
-    () => console.log(`Server started on 5001`)
+  {
+    port: 5001,
+  },
+  () => console.log(`Server started on 5001`)
 );
 
 const publicWss = new WebSocketServer(
-    {
-        port: 5002,
-    },
-    () => console.log(`Server started on 5002`)
+  {
+    port: 5002,
+  },
+  () => console.log(`Server started on 5002`)
 );
 
-publicWss.on('connection', function connnection(ws) {
-    ws.on('message', function (message) {
-        message = JSON.parse(message);
+publicWss.on("connection", function connnection(ws) {
+  ws.on("message", function (message) {
+    message = JSON.parse(message);
 
-        switch (message.event) {
-            case 'message':
-                broadcastMessage(message);
-                break;
-        }
-    });
+    switch (message.event) {
+      case "message":
+        broadcastMessage(message);
+        break;
+    }
+  });
 });
 
 function checkAuthWS(token) {
-    if (!token) return;
+  if (!token) return;
 
-    const decoded = jwt.verify(token, 'secret123');
-    return decoded._id;
+  const decoded = jwt.verify(token, "secret123");
+  return decoded._id;
 }
 
-wss.on('connection', function connnection(ws) {
-    ws.on('message', async function (message) {
-        try {
-            message = JSON.parse(message);
+wss.on("connection", function connnection(ws) {
+  ws.on("message", async function (message) {
+    try {
+      message = JSON.parse(message);
 
-            try {
-                ws.id = checkAuthWS(message.token);
-            } catch (error) {
-                ws.close(403);
-            }
+      try {
+        ws.id = checkAuthWS(message.token);
+      } catch (error) {
+        ws.close(403);
+      }
 
-            switch (message.event) {
-                case 'private-connection':
-                    break;
-                case 'private-message':
-                    const newMessage = await MessageController.create({
-                        videoUrl: message.videoUrl,
-                        audioUrl: message.audioUrl,
-                        message: message.message,
-                        from: ws.id,
-                        to: message.to,
-                        imageUrl: message?.imageUrl,
-                    });
+      switch (message.event) {
+        case "private-connection":
+          break;
+        case "private-message":
+          const newMessage = await MessageController.create({
+            videoUrl: message.videoUrl,
+            audioUrl: message.audioUrl,
+            message: message.message,
+            from: ws.id,
+            to: message.to,
+            imageUrl: message?.imageUrl,
+          });
 
-                    privateMessage(newMessage, ws.id, message.to);
-                    break;
-            }
-        } catch (error) {
-            ws.close();
-            throw new Error(error.message);
-        }
-    });
+          privateMessage(newMessage, ws.id, message.to);
+          break;
+      }
+    } catch (error) {
+      ws.close();
+      throw new Error(error.message);
+    }
+  });
 });
 
 function broadcastMessage(message) {
-    publicWss.clients.forEach((client) => {
-        client.send(JSON.stringify(message));
-    });
+  publicWss.clients.forEach((client) => {
+    client.send(JSON.stringify(message));
+  });
 }
 
 function privateMessage(message, from, to) {
-    wss.clients.forEach((client) => {
-        if (client.id === to || client.id === from) {
-            client.send(JSON.stringify(message));
-        }
-    });
+  wss.clients.forEach((client) => {
+    if (client.id === to || client.id === from) {
+      client.send(JSON.stringify(message));
+    }
+  });
 }
 
 mongoose
-    .connect('mongodb://localhost:27017/social-media-app')
-    .then(() => {
-        console.log('DB OK');
-    })
-    .catch((e) => console.log('DB Error', e));
+  .connect("mongodb://localhost:27017/social-media-app")
+  .then(() => {
+    console.log("DB OK");
+  })
+  .catch((e) => console.log("DB Error", e));
 
 const app = express();
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads');
-    },
-    filename: (req, file, cb) => {
-        const fileName = `${Date.now()}-${file.originalname}`;
-        cb(null, fileName);
-    },
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${Date.now()}-${file.originalname}`;
+    cb(null, fileName);
+  },
 });
 
 const upload = multer({ storage });
 
 app.use(express.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 
-app.post('/upload', upload.single('file'), (req, res) => {
-    res.json({
-        url: `/${req.file.path.replace(/\\/g, '/')}`,
-    });
+app.post("/upload", upload.single("file"), (req, res) => {
+  res.json({
+    url: `/${req.file.path.replace(/\\/g, "/")}`,
+  });
 });
 
-app.post('/theme', checkAuth, UserController.toggleTheme);
+app.post("/theme", checkAuth, UserController.toggleTheme);
 
-app.get('/search', UserController.getUser);
+app.get("/search", UserController.getUserByName);
 
-app.get('/message', checkAuth, MessageController.getAll);
+app.get("/message", checkAuth, MessageController.getAll);
 
-app.get('/dialogs', checkAuth, MessageController.getDialogs);
+app.get("/dialogs", checkAuth, MessageController.getDialogs);
 
-app.post('/message', checkAuth, MessageController.newMessage);
+app.post("/message", checkAuth, MessageController.newMessage);
 
-app.get('/comments', checkAuth, CommentController.getCommentById);
+app.get("/comments", checkAuth, CommentController.getCommentByPostId);
 
-app.get('/comments/:id', checkAuth, CommentController.getUserComments);
+app.get("/comments/:id", checkAuth, CommentController.getUserComments);
 
-app.post('/comments', checkAuth, CommentController.create);
+app.post("/comments", checkAuth, CommentController.create);
 
 app.post(
-    '/auth/login',
-    loginValidation,
-    handleValidationErrors,
-    UserController.login
+  "/auth/login",
+  loginValidation,
+  handleValidationErrors,
+  UserController.login
 );
 
 app.post(
-    '/auth/register',
-    registerValidator,
-    handleValidationErrors,
-    UserController.register
+  "/auth/register",
+  registerValidator,
+  handleValidationErrors,
+  UserController.register
 );
 
-app.get('/auth/me', checkAuth, UserController.getMe);
-app.patch('/auth', checkAuth, UserController.updateUserInfo);
-app.get('/tags', PostController.getLastTags);
-app.get('/posts', PostController.getAll);
-app.get('/posts/:id', PostController.getOne);
+app.get("/auth/user", checkAuth, UserController.getUserById);
+app.patch("/auth/user", checkAuth, UserController.updateUserInfo);
+app.get("/auth/friend", checkAuth, UserController.getFriends);
+app.patch("/auth/friend", checkAuth, UserController.addFriend);
+app.delete("/auth/friend", checkAuth, UserController.removeFriend);
+app.get("/tags", checkAuth, PostController.getLastTags);
+app.get("/posts", checkAuth, PostController.getAll);
+app.get("/posts/user", checkAuth, PostController.getUserPosts);
+app.get("/posts/:id", checkAuth, PostController.getOne);
 app.post(
-    '/posts',
-    checkAuth,
-    postCreateValidation,
-    handleValidationErrors,
-    PostController.create
+  "/posts",
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  PostController.create
 );
-app.delete('/posts/:id', checkAuth, PostController.remove);
+app.delete("/posts/:id", checkAuth, PostController.remove);
 app.patch(
-    '/posts/:id',
-    checkAuth,
-    postCreateValidation,
-    handleValidationErrors,
-    PostController.update
+  "/posts/:id",
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  PostController.update
 );
+app.patch("/post/like", checkAuth, PostController.like);
+app.patch("/post/unlike", checkAuth, PostController.unlike);
 
 app.listen(5000, (err) => {
-    if (err) {
-        return console.log(err);
-    }
+  if (err) {
+    return console.log(err);
+  }
 
-    console.log('Server OK');
+  console.log("Server OK");
 });
