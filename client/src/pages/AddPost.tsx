@@ -17,7 +17,6 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { PostImg } from "../components/Post";
 import { $authHost } from "../axios/axios";
 import { BASE_URL } from "../utils/consts";
-import Spinner from "../components/Loaders/Spinner";
 import { IPost } from "../types/Post";
 import { fetchPosts } from "../redux/slices/postsSlice/postsSlice";
 import { uploadFile } from "../utils/api/uploadFile";

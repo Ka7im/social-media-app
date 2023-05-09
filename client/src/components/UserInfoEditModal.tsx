@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Modal from "./Modal";
 import { Button } from "./Button";
 import { useState } from "react";
-import { $authHost } from "../axios/axios";
 import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../redux/redux-hook";
 import { updateUserInfo } from "../redux/slices/authSlice/authSlice";

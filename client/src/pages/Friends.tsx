@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Layout from "../components/Layout";
 import styled from "styled-components";
-import Friend from "../components/Friend/Friend";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hook";
 import { getFriendsSelector } from "../redux/slices/friendsSlice/selectors";
 import { getFriends } from "../redux/slices/friendsSlice/friendsSlice";

@@ -157,9 +157,9 @@ const CreatePostWrapper = styled.div`
   padding: 20px;
 `;
 
-const PostsTitle = styled.div`
+const CommentSubTitle = styled.div`
   color: ${(props) => props.theme.colors.font};
-  font-size: 25px;
+  font-size: 15px;
   text-align: center;
   font-weight: 500;
   margin-top: 25px;
@@ -329,8 +329,6 @@ const Profile = () => {
 
           {
             <>
-              <PostsTitle>Все посты</PostsTitle>
-
               <PostsWrapper>
                 {status === Status.Loading ? (
                   <SmallSpinner />
@@ -349,7 +347,13 @@ const Profile = () => {
             {isLoading ? (
               <CommentSkeletonList />
             ) : (
-              <CommentsListWithLink comments={comments} user={user} />
+              <>
+                {comments.length ? (
+                  <CommentsListWithLink comments={comments} user={user} />
+                ) : (
+                  <CommentSubTitle>У вас пока нет комментариев</CommentSubTitle>
+                )}
+              </>
             )}
           </CommentWrapper>
         </div>

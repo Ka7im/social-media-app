@@ -31,7 +31,7 @@ import SmallSpinner from "../components/Loaders/SmallSpinner";
 
 export const PostsWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   row-gap: 10px;
   justify-content: center;
 `;
@@ -43,10 +43,16 @@ const PostsSidebar = styled.div`
 `;
 
 const Observable = styled.div`
-  height: 40px;
-  width: 40px;
   display: flex;
   justify-content: center;
+`;
+
+const PostTitle = styled.div`
+  color: ${(props) => props.theme.colors.font};
+  font-size: 20px;
+  text-align: center;
+  font-weight: 500;
+  margin-top: 25px;
 `;
 
 const Posts = () => {
@@ -87,23 +93,38 @@ const Posts = () => {
     <Layout>
       <>
         <PostsWrapper>
-          {postStatus === Status.FirstLoading
-            ? [...new Array(3)].map((item, i) => {
-                return (
-                  <PostWrapper key={i}>
-                    <PostSkeleton />
-                  </PostWrapper>
-                );
-              })
-            : posts.items.map((post) => {
-                return (
-                  <Post
-                    {...post}
-                    key={post._id}
-                    isOwner={userData?._id === post.user._id}
-                  />
-                );
-              })}
+          {postStatus === Status.FirstLoading ? (
+            [...new Array(3)].map((item, i) => {
+              return (
+                <PostWrapper key={i}>
+                  <PostSkeleton />
+                </PostWrapper>
+              );
+            })
+          ) : (
+            <>
+              {posts.items.length ? (
+                posts.items.map((post) => {
+                  return (
+                    <Post
+                      {...post}
+                      key={post._id}
+                      isOwner={userData?._id === post.user._id}
+                    />
+                  );
+                })
+              ) : (
+                <>
+                  {postStatus !== Status.Loading && (
+                    <PostTitle>
+                      Добавлейте пользователей в друзья <br /> чтобы увидеть из
+                      посты
+                    </PostTitle>
+                  )}
+                </>
+              )}
+            </>
+          )}
 
           <Observable ref={observable}>
             {postStatus === Status.Loading && <SmallSpinner />}

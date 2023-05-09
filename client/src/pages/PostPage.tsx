@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { useDispatch } from "react-redux";
-import { Navigate, useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { $authHost, $host } from "../axios/axios";
 import { Container } from "../components/Container";

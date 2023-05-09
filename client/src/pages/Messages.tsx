@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Layout from "../components/Layout";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hook";
-import { ChatPageWrapper } from "./ChatPage";
 import Dialog from "../components/Dialog";
 import { IMessage } from "../types/Message";
 import { $authHost } from "../axios/axios";
@@ -16,6 +15,10 @@ import { useDialogs } from "../utils/hooks/useDialogs";
 import ChatInput from "../components/ChatInput/ChatInput";
 import MessageList from "../components/MessageList/MessageList";
 import DialogSkeletonList from "../components/Loaders/DialogSkeletonList";
+
+const ChatPageWrapper = styled.div`
+  display: grid;
+`;
 
 const DialogSidebar = styled.div`
   display: flex;

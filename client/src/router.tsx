@@ -5,10 +5,8 @@ import App from "./App";
 import Spinner from "./components/Loaders/Spinner";
 import AddPost from "./pages/AddPost";
 import Authorization from "./pages/Authorization";
-import ChatPage from "./pages/ChatPage";
 import Posts from "./pages/Posts";
 import {
-  CHAT_PAGE,
   FRIENDS_PAGE,
   MESSAGES_PAGE,
   POST_PAGE,
@@ -36,7 +34,6 @@ const routes = createRoutesFromElements(
     <Route path="login" element={<Authorization />} />
     <Route path="add-post" element={<AddPost />} />
     <Route path="/:id/edit" element={<AddPost />} />
-    <Route path={CHAT_PAGE} element={<ChatPage />} />
     <Route path={MESSAGES_PAGE} element={<Messages />} />
     <Route
       path="/:id"
