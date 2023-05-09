@@ -5,7 +5,15 @@ import UserModel from "../models/User.js";
 class PostController {
   async getLastTags(req, res) {
     try {
-      const posts = await PostModel.find().limit(5).sort("-createdAt").exec();
+      const { userId } = req;
+      const { friends } = await UserModel.findOne({ _id: userId });
+
+      const posts = await PostModel.find({
+        user: { $in: friends },
+      })
+        .limit(5)
+        .sort("-createdAt")
+        .exec();
 
       const tags = posts
         .map((obj) => obj.tags)
@@ -65,7 +73,7 @@ class PostController {
 
       let isNewPage;
 
-      if (page !== 1) {
+      if (page != "1") {
         isNewPage = true;
       } else {
         isNewPage = false;

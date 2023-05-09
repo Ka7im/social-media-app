@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { createRoutesFromElements, Route } from "react-router";
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import Spinner from "./components/Spinner";
+import Spinner from "./components/Loaders/Spinner";
 import AddPost from "./pages/AddPost";
 import Authorization from "./pages/Authorization";
 import ChatPage from "./pages/ChatPage";

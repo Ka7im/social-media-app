@@ -24,9 +24,10 @@ import { baseTheme } from "../utils/theme";
 import { Post } from "../components/Post";
 import { getUserPosts, Status } from "../redux/slices/postsSlice/postsSlice";
 import { getUserPostsSelector } from "../redux/slices/postsSlice/selectors";
-import SmallSpinner from "../components/SmallSpinner/SmallSpinner";
+import SmallSpinner from "../components/Loaders/SmallSpinner";
 import { PostsWrapper } from "./Posts";
-import CommentSkeletonList from "../components/CommentSkeletonList";
+import CommentSkeletonList from "../components/Loaders/CommentSkeletonList";
+import ProfileUserSkeleton from "../components/Loaders/ProfileUserSkeleton";
 
 const ProfileWrapper = styled.div`
   display: flex;
@@ -169,7 +170,7 @@ const Profile = () => {
   const userId = useAppSelector(getUserIdSelector);
   const { friends } = useAppSelector(getFriendsSelector);
   const { status, items } = useAppSelector(getUserPostsSelector);
-  const { user, setUser } = useUser(id as string);
+  const { user, setUser, isUserLoading } = useUser(id as string);
   const [isActive, setIsActive] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -214,31 +215,41 @@ const Profile = () => {
       <>
         <ProfileWrapper>
           <UserInfo>
-            <ProfileAvatar src={`${BASE_URL}${user?.avatarUrl}`} />
-            <Information>
-              <UserName>{user?.fullName}</UserName>
-              <More>
-                {isOwner ? (
-                  <>
-                    <AiOutlineEdit />
-                    <Title onClick={() => setIsActive(true)}>Изменить</Title>
-                  </>
-                ) : (
-                  <>
-                    {!isFriend ? (
-                      <Button onClick={handleAdd}>Добавить в друзья</Button>
+            {isUserLoading ? (
+              <ProfileUserSkeleton />
+            ) : (
+              <>
+                <ProfileAvatar src={`${BASE_URL}${user?.avatarUrl}`} />
+                <Information>
+                  <UserName>{user?.fullName}</UserName>
+                  <More>
+                    {isOwner ? (
+                      <>
+                        <AiOutlineEdit />
+                        <Title onClick={() => setIsActive(true)}>
+                          Изменить
+                        </Title>
+                      </>
                     ) : (
-                      <Button onClick={handleDelete}>Удалить из друзей</Button>
+                      <>
+                        {!isFriend ? (
+                          <Button onClick={handleAdd}>Добавить в друзья</Button>
+                        ) : (
+                          <Button onClick={handleDelete}>
+                            Удалить из друзей
+                          </Button>
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </More>
-            </Information>
-            <UserInfoEditModal
-              isActive={isActive}
-              setIsActive={setIsActive}
-              setUser={setUser}
-            />
+                  </More>
+                </Information>
+                <UserInfoEditModal
+                  isActive={isActive}
+                  setIsActive={setIsActive}
+                  setUser={setUser}
+                />
+              </>
+            )}
           </UserInfo>
           <InfoWrapper>
             <Description>

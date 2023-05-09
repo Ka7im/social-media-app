@@ -1,5 +1,5 @@
 import React from "react";
-import { CommentWrapper } from "./Comment";
+import { CommentWrapper } from "../Comment";
 import CommentSkeleton from "./CommentSkeleton";
 
 const CommentSkeletonList = () => {

@@ -21,7 +21,7 @@ import {
   PostWrapper,
   UserName,
 } from "../components/Post";
-import Spinner from "../components/Spinner";
+import Spinner from "../components/Loaders/Spinner";
 import { IPost } from "../types/Post";
 import { BASE_URL } from "../utils/consts";
 import AddComment from "../components/AddComment";

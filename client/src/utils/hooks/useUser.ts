@@ -4,12 +4,15 @@ import { $authHost } from "../../axios/axios";
 
 export function useUser(id: string) {
   const [user, setUser] = useState<IUser | null>(null);
+  const [isUserLoading, setIsUserLoading] = useState(true);
 
   useEffect(() => {
-    $authHost
-      .get("auth/user", { params: { id } })
-      .then(({ data }) => setUser(data));
+    setIsUserLoading(true);
+    $authHost.get("auth/user", { params: { id } }).then(({ data }) => {
+      setUser(data);
+      setIsUserLoading(false);
+    });
   }, [id]);
 
-  return { user, setUser };
+  return { user, setUser, isUserLoading };
 }

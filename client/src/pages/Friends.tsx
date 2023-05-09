@@ -7,7 +7,7 @@ import { getFriendsSelector } from "../redux/slices/friendsSlice/selectors";
 import { getFriends } from "../redux/slices/friendsSlice/friendsSlice";
 import FriendsList from "../components/FriendsList/FriendsList";
 import { Status } from "../redux/slices/postsSlice/postsSlice";
-import SmallSpinner from "../components/SmallSpinner/SmallSpinner";
+import SmallSpinner from "../components/Loaders/SmallSpinner";
 
 const FriendsWrapper = styled.div`
   border-radius: 12px;

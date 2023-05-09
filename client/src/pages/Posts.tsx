@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 import Layout from "../components/Layout";
 import Post, { PostWrapper } from "../components/Post";
-import PostSkeleton from "../components/PostSkeleton";
+import PostSkeleton from "../components/Loaders/PostSkeleton";
 import Tags, { TagsTitle, TagsWrapper } from "../components/Tags";
-import TagSkeleton from "../components/TagSkeleton";
+import TagSkeleton from "../components/Loaders/TagSkeleton";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hook";
 import {
   getTagFilterSelector,
@@ -27,7 +27,7 @@ import {
   getTagsStatusSelector,
 } from "../redux/slices/postsSlice/selectors";
 import useScroll from "../utils/hooks/useScroll";
-import SmallSpinner from "../components/SmallSpinner/SmallSpinner";
+import SmallSpinner from "../components/Loaders/SmallSpinner";
 
 export const PostsWrapper = styled.div`
   display: flex;

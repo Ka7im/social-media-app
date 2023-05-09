@@ -87,6 +87,8 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.data = null;
+      state.postFilter = "";
+      state.theme = lightTheme;
       localStorage.removeItem("token");
     },
     setFilterTag: (state, action) => {

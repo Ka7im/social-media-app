@@ -15,6 +15,7 @@ import { getUserIdSelector } from "../redux/slices/authSlice/selectors";
 import { useDialogs } from "../utils/hooks/useDialogs";
 import ChatInput from "../components/ChatInput/ChatInput";
 import MessageList from "../components/MessageList/MessageList";
+import DialogSkeletonList from "../components/Loaders/DialogSkeletonList";
 
 const DialogSidebar = styled.div`
   display: flex;
@@ -36,9 +37,15 @@ const SelectChat = styled.div`
   justify-self: center;
 `;
 
+const MessagesEmptyDialogTitle = styled.div`
+  color: ${(props) => props.theme.colors.font};
+  text-align: center;
+  padding: 10px 0;
+`;
+
 const Messages = () => {
   const [isSelected, setIsSelected] = useState(false);
-  const { dialogs, setDialogs } = useDialogs();
+  const { dialogs, setDialogs, isDialogsLoading } = useDialogs();
   const [to, setTo] = useState("");
   const socket = useRef<WebSocket>();
   const lastMessage = useRef<HTMLDivElement>();
@@ -92,24 +99,36 @@ const Messages = () => {
           )}
         </ChatPageWrapper>
         <DialogSidebar>
-          {dialogs.map((dialog, i) => {
-            return (
-              <Dialog
-                key={dialog._id}
-                onClick={() => {
-                  setIsSelected(true);
-                  setTo(dialog._id);
-                  dispatch(
-                    getMessages({
-                      userOne: userId as string,
-                      userTwo: dialog._id,
-                    })
+          {isDialogsLoading ? (
+            <DialogSkeletonList />
+          ) : (
+            <>
+              {dialogs.length ? (
+                dialogs.map((dialog, i) => {
+                  return (
+                    <Dialog
+                      key={dialog._id}
+                      onClick={() => {
+                        setIsSelected(true);
+                        setTo(dialog._id);
+                        dispatch(
+                          getMessages({
+                            userOne: userId as string,
+                            userTwo: dialog._id,
+                          })
+                        );
+                      }}
+                      userData={dialog}
+                    />
                   );
-                }}
-                userData={dialog}
-              />
-            );
-          })}
+                })
+              ) : (
+                <MessagesEmptyDialogTitle>
+                  К сожалению у вас нет диалогов
+                </MessagesEmptyDialogTitle>
+              )}
+            </>
+          )}
         </DialogSidebar>
       </>
     </Layout>
