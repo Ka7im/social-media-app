@@ -36,6 +36,8 @@ const UsersWrapper = styled.ul`
   flex-direction: column;
   row-gap: 10px;
   width: 280px;
+  max-height: 200px;
+  overflow: auto;
 `;
 
 const User = styled.li`
@@ -68,7 +70,7 @@ const MessageIcon = styled.div`
 const Search = () => {
   const [value, setValue] = useState("");
   const [users, setUsers] = useState<IUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalActive, setIsModalActive] = useState(false);
   const [selectedUser, setSelectedUser] = useState<IUser>();
 

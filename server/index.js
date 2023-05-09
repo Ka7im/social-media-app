@@ -15,7 +15,7 @@ const wss = new WebSocketServer(
   {
     port: process.env.WS_PORT || 5001,
   },
-  () => console.log(`Server started on 5001`)
+  () => console.log(`WS Server started on ${process.env.WS_PORT}`)
 );
 
 wss.on("connection", function connection(ws) {
