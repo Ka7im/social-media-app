@@ -15,6 +15,7 @@ import { useDialogs } from "../utils/hooks/useDialogs";
 import ChatInput from "../components/ChatInput/ChatInput";
 import MessageList from "../components/MessageList/MessageList";
 import DialogSkeletonList from "../components/Loaders/DialogSkeletonList";
+import { WS_BASE_URL } from "../utils/consts";
 
 const ChatPageWrapper = styled.div`
   display: grid;
@@ -56,7 +57,7 @@ const Messages = () => {
   const userId = useAppSelector(getUserIdSelector);
 
   useEffect(() => {
-    socket.current = new WebSocket("ws://localhost:5001");
+    socket.current = new WebSocket(WS_BASE_URL as string);
 
     socket.current.onopen = () => {
       const message = {
