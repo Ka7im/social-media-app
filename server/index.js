@@ -10,10 +10,33 @@ import { privateMessage } from "./utils/privateMessage.js";
 import routes from "./routes/index.js";
 
 dotenv.config();
+const app = express();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    const fileName = `${Date.now()}-${file.originalname}`;
+    cb(null, fileName);
+  },
+});
+
+const upload = multer({ storage });
+
+app.use(express.json());
+app.use(cors());
+app.use("", routes);
+app.use("/uploads", express.static("uploads"));
+app.post("/upload", upload.single("file"), (req, res) => {
+  res.json({
+    url: `/${req.file.path.replace(/\\/g, "/")}`,
+  });
+});
 
 const wss = new WebSocketServer(
   {
-    port: process.env.WS_PORT || 5001,
+    port: process.env.WS_PORT || 8443,
   },
   () => console.log(`WS Server started on ${process.env.WS_PORT}`)
 );
@@ -49,30 +72,6 @@ wss.on("connection", function connection(ws) {
       ws.close();
       throw new Error(error.message);
     }
-  });
-});
-
-const app = express();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads");
-  },
-  filename: (req, file, cb) => {
-    const fileName = `${Date.now()}-${file.originalname}`;
-    cb(null, fileName);
-  },
-});
-
-const upload = multer({ storage });
-
-app.use(express.json());
-app.use(cors());
-app.use("", routes);
-app.use("/uploads", express.static("uploads"));
-app.post("/upload", upload.single("file"), (req, res) => {
-  res.json({
-    url: `/${req.file.path.replace(/\\/g, "/")}`,
   });
 });
 
