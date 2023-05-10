@@ -1,4 +1,9 @@
 services:
-  - name: my-websocket-service
-    type: websockets
-    port: 5001
+  - name: my-node-app
+    env:
+      NODE_ENV: production
+    buildCommand: npm run build
+    startCommand: npm start
+    websockets:
+      enable: true
+      sessionAffinity: external
