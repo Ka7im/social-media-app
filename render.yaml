@@ -1,10 +1,12 @@
 services:
-  - type: web
-    name: my-node-app
+  - name: my-node-app
+    type: web
     env:
       NODE_ENV: production
     buildCommand: npm run build
     startCommand: npm start
     websockets:
-      type: ws
+      enable: true
+      sessionAffinity: external
+
 
