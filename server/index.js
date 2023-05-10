@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import dotenv, { config } from "dotenv";
 import mongoose from "mongoose";
 import multer from "multer";
 import { MessageController } from "./controllers/index.js";
@@ -36,7 +36,7 @@ app.post("/upload", upload.single("file"), (req, res) => {
 
 const wss = new WebSocketServer(
   {
-    port: process.env.WS_PORT || 8443,
+    port: process.env.WS_PORT || 5001,
   },
   () => console.log(`WS Server started on ${process.env.WS_PORT}`)
 );

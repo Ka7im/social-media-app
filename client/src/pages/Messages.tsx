@@ -57,7 +57,7 @@ const Messages = () => {
   const userId = useAppSelector(getUserIdSelector);
 
   useEffect(() => {
-    socket.current = new WebSocket(WS_BASE_URL as string);
+    socket.current = new WebSocket("wss://social-media-app-218x.onrender.com");
 
     socket.current.onopen = () => {
       const message = {
