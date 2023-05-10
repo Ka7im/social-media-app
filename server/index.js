@@ -89,7 +89,7 @@ app.listen(PORT, (err) => {
     .then(() => {
       console.log("DB OK");
     })
-    .catch((e) => console.log("DB Error", e));
+    .catch((e) => console.log("DB error", e));
 
   console.log("Server OK");
 });
