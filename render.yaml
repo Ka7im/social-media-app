@@ -5,6 +5,5 @@ services:
     buildCommand: npm run build
     startCommand: npm start
     websockets:
-      type: wss
-      enable: true
-      sessionAffinity: external
+      type: ws
+
