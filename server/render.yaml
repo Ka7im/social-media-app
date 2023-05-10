@@ -1,0 +1,4 @@
+services:
+  - name: my-websocket-service
+    type: websockets
+    port: 5001
